@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
+const auth = require('../middleware/auth');
 const User = require('../models/user');
 const res = require('express/lib/response');
 const { token } = require('morgan');
@@ -146,8 +147,21 @@ router.post('/login', [
   }
   )
 
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+
+/** 
+* @method - GET
+* @param - /user/me
+* @description - Get LoggenIn User 
+*/
+
+router.get('/me', auth, async(req, res, next) =>{
+  try{
+    //request.user is getting fetched from Middleware after token authentication
+    const user = await User.findById(req.user.id);
+    res.json(user);
+  } catch (e) {
+    res.send({message: "Error in Fetching user"});
+  }
 });
 
 module.exports = router;
