@@ -1,0 +1,37 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/stylesheets/main.css")
+    link(rel="stylejs", href="/javascripts/main.js")
+    title register account
+  body 
+    div(class="split left") 
+        .centered 
+            h2 To-do List App 
+            p An awesome app to save your todo works 
+
+    div(class="split right") 
+        .centered 
+            h2.page__title Signup or Login
+            br
+            br
+            form.user__form(action="/user/signup", method="POST")
+                .form__control 
+                    //label(for="username") Username 
+                    input(type="text", placeholder="Username", required=true, name="username")#username
+                    //label(for="email" ) Email 
+                    br
+                    input(type="text", placeholder="Enter email address", required=true, name="email")#email
+                    //label(for="password") Password 
+                    br
+                    input(type="password", placeholder="Enter Password", required=true, name="password")#password
+                    //label(for="confirmPassword") Confirm password
+                    br 
+                    input(type="password", placeholder="Confirm Password" required=true, name="confirmPassword")#confirmPassword
+                    br  
+                    input(type="radio", required=true, name="terms-cons")#terms-cons
+                    label(for="terms-cons") I agree to the Terms and Conditions.
+                button.btn(type="submit") register
