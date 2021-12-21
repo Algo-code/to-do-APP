@@ -9,6 +9,8 @@ const auth = require('../middleware/auth');
 const User = require('../models/user');
 const res = require('express/lib/response');
 const { token } = require('morgan');
+// const { status } = require('express/lib/response');
+// const { response } = require('../app');
 
 
 /** 
@@ -133,9 +135,12 @@ router.post('/login', [
         },
         (err, token) => {
           if(err) throw err;
-          res.status(200).json({
-            token
-          });
+           res.status(200)
+           .json({
+             token
+           });
+           //res.redirect('/me',)
+           
         }
       );
     } catch(e){
@@ -155,13 +160,21 @@ router.post('/login', [
 */
 
 router.get('/me', auth, async(req, res, next) =>{
+  console.log("req header set: "+token);
+  //req.setHeader("token", token);
+  //req.redirect('/user/me');
   try{
     //request.user is getting fetched from Middleware after token authentication
     const user = await User.findById(req.user.id);
+    //res.render('dashboard',{pageTitle: "Dashboard", user:user});
     res.json(user);
   } catch (e) {
     res.send({message: "Error in Fetching user"});
   }
 });
+
+router.get('/login', function(req, res, next){
+  res.render('login');
+})
 
 module.exports = router;

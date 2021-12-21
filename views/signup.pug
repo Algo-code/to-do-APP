@@ -15,8 +15,9 @@ html(lang="en")
 
     div(class="split right") 
         .centered 
-            h2.page__title Signup or Login
+            h1.page__title Register Account
             br
+            p.par 2DO Helps you manage your day to day routines in one cohesive and tidy space. Signup now to improve your productivity.
             br
             form.user__form(action="/user/signup", method="POST")
                 .form__control 
@@ -31,7 +32,10 @@ html(lang="en")
                     //label(for="confirmPassword") Confirm password
                     br 
                     input(type="password", placeholder="Confirm Password" required=true, name="confirmPassword")#confirmPassword
-                    br  
-                    input(type="radio", required=true, name="terms-cons")#terms-cons
-                    label(for="terms-cons") I agree to the Terms and Conditions.
+                    br
+                    label(class="container") I agree to the terms and conditions 
+                        input(type="checkbox")
+                        span(class="checkmark")
                 button.btn(type="submit") register
+                br
+                a(href="/user/login", class="to__login") Already have an account? Login here
