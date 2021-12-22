@@ -175,6 +175,10 @@ router.get('/me', auth, async(req, res, next) =>{
 
 router.get('/login', function(req, res, next){
   res.render('user/login');
-})
+});
+
+router.get('/', function(req, res, next) {
+  res.render('user/signup');
+});
 
 module.exports = router;

@@ -1,7 +1,19 @@
-doctype html
-html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+<!DOCTYPE html>
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+        title #{title}
+        block styles
+    body   
+        header.main-header
+            nav.main-header__nav
+                ul.main-header__item-list
+                    li.main-header__item
+                        a(href="/", class=(path === '/' ? 'active' : '')) Tasks
+                    li.main-header__item
+                        a(href="/shop/product-list", class=(path === '/products' ? 'active' : '')) Collections
+                    li.main-header__item
+                        a(href="/shop/cart", class=(path === '/cart' ? 'active' : '')) Dashboard
+        block content

@@ -50,7 +50,7 @@ exports.get_tasks = (req, res, next) => {
     .exec((err, task_list) =>{
         if(err)
             return next(err);
-        res.render('todo/all_tasks', {title: 'All Tasks', task_list: task_list});
+        res.render('todo/all_tasks', {title: 'All Tasks', tasks: task_list});
     });
 };
 

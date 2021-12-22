@@ -7,7 +7,7 @@
 */
 .split{
     height: 100%;
-    width: 70%;
+    width: 80%;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -18,9 +18,8 @@
 /* Control left side*/
 .left{
     left: 0;
-    width: 30%;
-    background-color: #0BDEB8;
-    opacity: 50%;
+    width: 20%;
+    background-color: purple;
 }
 
 /*Control right side*/
@@ -29,11 +28,52 @@
     font-family: 'Roboto', sans-serif;
 }
 
+.l__items{
+    display: inline-block;
+    background-color: #efefef;
+    border: 1px solid #aaa;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
+    width: 100%;
+}
+/* .task__card{
+    width: 70%;
+}
+.task__action{
+    width: 30%;
+} */
+
+/* 
+.list{
+    background-color: aquamarine;
+} */
+
 .centered{
     position: absolute;
     top: 30%;
-    left: 50%;
-    transform: translate(-80%, -30%);
+    left: 20%;
+    transform: translate(-20%, -30%);
+    text-align: left;
+    background-color: black;
+}
+.right{
+    position: absolute;
+    top: 30%;
+    left: 100%;
+    transform: translate(-100%, -30%);
+    text-align: left;
+    display: grid;
+    width: 78%;
+}
+
+.div__align{
+    position: absolute;
+    top: 30%;
+    left: 10%;
+    transform: translate(-10%, -30%);
     text-align: left;
 }
 
@@ -55,7 +95,7 @@
 }
 
 .form__control input:focus{
-    outline-color: #0BDEB8;
+    outline-color: purple;
 }
 
 .h1{
@@ -73,7 +113,7 @@
 .btn{
     width: 10rem;
     padding: 10px;
-    background-color: #0bdeb78c;
+    background-color: rgba(128, 0, 128, 0.753);
     color: white;
     text-align: center;
     box-shadow: none;
@@ -83,7 +123,7 @@
     margin-top: 20px;
 }
 .btn:hover{
-    background-color: #0BDEB8;
+    background-color: purple;
 }
 .to__login{
     font-family: 'Roboto', sans-serif;
@@ -127,7 +167,7 @@
     background-color: #ccc;
 }
 .container input:checked ~ .checkmark{
-    background-color: #0BDEB8;
+    background-color: purple;
 }
 
 .checkmark::after{
@@ -151,3 +191,10 @@
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
+
+
+/**
+***** Task Card CSSS below
+*/
+
+

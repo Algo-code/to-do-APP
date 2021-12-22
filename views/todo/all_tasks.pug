@@ -1,0 +1,63 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/stylesheets/main.css")
+    link(rel="stylesheet", href="/stylesheets/task_card.css")
+    link(rel="stylejs", href="/javascripts/main.js")
+    link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
+    link(href='https://css.gg/calendar.css' rel='stylesheet')
+    link(rel="stylesheet" href="/icons/font-awesome/css/font-awesome.css")
+    title Tasks
+
+    body
+        div(class="split left")
+            .centered 
+                h2 Boards 
+            
+        div(class="split right")
+            section(class="cards")
+                if tasks.length > 0
+                    each task in tasks 
+                        article(class="card card--1")
+                            div(class="card__img")
+                                
+                                div(class="card__info-hover")
+                                    svg(class="task__done" viewBox="0 0 24 24")
+                                    path(fill="#000000" d="")
+                                div(class="task__delete")
+                                    span.icon__btn(class="material-icons md24") delete
+                                span.calen(class="material-icons md24") calendar_month
+                                h1 #{task.day}
+                            a(href="#" class="card__link")                                   
+                                div(class="card__img--hover")
+                            div(class="card__info")
+                                span(class="card__title") #{task.title}
+                                h3(class="card__description") #{task.description}
+                                p(class="card__board") #{task.board}
+                                span(class="task__due") #{task.weekday}
+
+
+
+
+
+
+
+
+
+            //- .centered 
+            //-     button.btn() Prev
+            //-     h2 #{board}
+            //-     if tasks.length > 0
+            //-         ul.list 
+            //-             each task in tasks 
+            //-                 .l__items
+            //-                     .task__card
+            //-                         h3 #{task.title}
+            //-                         p #{task.day}
+            //-                     .task_action 
+            //-                         span.icon__btn(class="material-icons md24") delete
+            //-                         span.icon__btn(class="material-icons md24") chevron_right
+                                        
