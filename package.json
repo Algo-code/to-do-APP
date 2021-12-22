@@ -8,6 +8,7 @@
     "start-server": "node ./bin/www"
   },
   "dependencies": {
+    "async": "^3.2.2",
     "bcrypt": "^5.0.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
