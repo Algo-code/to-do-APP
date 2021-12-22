@@ -1,12 +1,6 @@
 const mongoose =require("mongoose");
 const { DateTime } = require('luxon');
 
-function getDayOfWeek(date) {
-    const dayOfWeek = new Date(date).getDay();    
-    return isNaN(dayOfWeek) ? null : 
-      ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
-  }
-
 const TaskSchema = mongoose.Schema({
     title: {
         type: String,
@@ -20,8 +14,8 @@ const TaskSchema = mongoose.Schema({
         default: Date.now()
     },
     board: {
-        type: String,
-        default: "random"
+        type: mongoose.Schema.Types.ObjectId, 
+        ref:'Board',
     }
 });
 

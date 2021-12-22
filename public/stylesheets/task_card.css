@@ -26,8 +26,67 @@ body, html {
   text-align: center;
 } 
 
+.top__items{
+    width: 100%;
+    display:flex;
+    display: -webkit-flex;
+    justify-content:left;
+    -webkit-justify-content: left;
+    position: absolute;
+    flex-direction: row;
+}
+
+.right__end{
+    width: 100%;
+    display:flex;
+    display: -webkit-flex;
+    justify-content:right;
+    -webkit-justify-content:right;
+    position: absolute;
+    flex-direction: row;
+}
+.btn{
+    margin: 20px;
+    margin-top: 35px;
+    width: 112px;
+}
+.to__tc{
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    padding-left: 13px;
+    padding-right: 13px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-family: 'Roboto', serif;
+    font-weight: 500;
+}
+
+h2{
+    font-size: 48px;
+    font-family: 'Roboto', serif;
+    font-weight: 700;
+    top: 0px;
+    padding-top: 0;
+    margin-top: 20px;
+    margin-left: 40px;
+}
+
+.chev1{
+    margin-top: 40px;
+} 
+.chev2{
+    margin-top: 40px;
+    margin-left: 50px;
+}
+
+
+
+
+
+
  .cards {
-    display: flex;
+    display: block;
     display: -webkit-flex;
     justify-content: center;
     -webkit-justify-content: center;

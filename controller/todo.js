@@ -1,4 +1,5 @@
 const Task = require("../models/todo");
+const { DateTime } = require('luxon');
 
 const async = require("async");
 const {body, validationResult} = require("express-validator");
@@ -26,7 +27,7 @@ exports.create_task_post = [
                 title: req.body.title,
                 description: req.body.description,
                 due_date: req.body.due_date,
-                board: req.body.board
+                board: undefined
             });
             task.save(function(err){
                 if(err)
@@ -45,12 +46,14 @@ exports.create_task_get = (req, res, next) => {
 
 //Display all Tasks
 exports.get_tasks = (req, res, next) => {
+    const date = new Date(Date.now());
+    const currentDate = DateTime.fromJSDate(date).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
     Task.find()
     .sort({due_date: 1})
     .exec((err, task_list) =>{
         if(err)
             return next(err);
-        res.render('todo/all_tasks', {title: 'All Tasks', tasks: task_list});
+        res.render('todo/all_tasks', {title: 'All Tasks', tasks: task_list, currentDate: currentDate});
     });
 };
 

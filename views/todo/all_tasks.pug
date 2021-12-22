@@ -14,10 +14,19 @@ html(lang="en")
 
     body
         div(class="split left")
-            .centered 
-                h2 Boards 
+            h3 Task Boards
+            li 
+
             
         div(class="split right")
+            section(class="top__items") 
+                span.chev1(class="material-icons md64") arrow_back_ios 
+                h2 #{currentDate}
+                span.chev2(class="material-icons md64") arrow_forward_ios
+            section(class="right__end")
+                button.btn
+                    a.to__tc(href="/task/create") Add Task
+            br
             section(class="cards")
                 if tasks.length > 0
                     each task in tasks 
@@ -38,26 +47,5 @@ html(lang="en")
                                 h3(class="card__description") #{task.description}
                                 p(class="card__board") #{task.board}
                                 span(class="task__due") #{task.weekday}
-
-
-
-
-
-
-
-
-
-            //- .centered 
-            //-     button.btn() Prev
-            //-     h2 #{board}
-            //-     if tasks.length > 0
-            //-         ul.list 
-            //-             each task in tasks 
-            //-                 .l__items
-            //-                     .task__card
-            //-                         h3 #{task.title}
-            //-                         p #{task.day}
-            //-                     .task_action 
-            //-                         span.icon__btn(class="material-icons md24") delete
-            //-                         span.icon__btn(class="material-icons md24") chevron_right
-                                        
+                else 
+                    h2 You Do Not Have Any Tasks!
