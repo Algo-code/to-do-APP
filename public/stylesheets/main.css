@@ -19,7 +19,13 @@
     left: 0;
     width: 20%;
     background-color: rgb(0, 21, 29);
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
 }
+
+.left::-webkit-scrollbar {
+    display: none;
+  }
 
 
 .l__items{

@@ -25,13 +25,13 @@ html(lang="en")
                 span Description
             label(for="board")
                 input(list="boards", type="text", placeholder="Task category", name="board")#board
+                span Board
                 datalist(id="boards")
                     option(value="random")
                     option(value="work")
                     option(value="school")
                     option(value="personal")
                     option(value="home")
-                span Board
             label(for="due_date")
                 input(type="date", placeholder="due date" required=true, name="due_date")#due_date 
                 //span Date

@@ -7,6 +7,8 @@ const Board = require("../models/board");
 const mongoose = require("mongoose");
 const { getMaxListeners } = require("../models/todo");
 
+const date = new Date(Date.now());
+const currentDate = DateTime.fromJSDate(date).toLocaleString(DateTime.DATE_SHORT);
 
 //create task
 exports.create_task_post = [
@@ -85,11 +87,9 @@ exports.create_task_get = (req, res, next) => {
 
 //Display all Tasks
 exports.get_tasks = (req, res, next) => {
-    const date = new Date(Date.now());
-    const currentDate = DateTime.fromJSDate(date).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
     async.parallel({
         tasks: function(callback){
-            Task.find()
+            Task.find({due_date: {$gte: currentDate}})
             .sort({due_date: 1})
             .populate('board')
             .exec(callback)
@@ -139,7 +139,7 @@ exports.get_task_board = (req, res, next) => {
             .exec(callback)
         },
         tasks: function(callback){
-            Task.find({'board':req.params.board})
+            Task.find({'board':req.params.board, due_date: {$gte: currentDate}})
             .populate('board')
             .exec(callback)
         }
