@@ -3,6 +3,8 @@ const { DateTime } = require('luxon');
 
 const async = require("async");
 const {body, validationResult} = require("express-validator");
+const Board = require("../models/board");
+const mongoose = require("mongoose");
 
 
 //create task
@@ -22,25 +24,61 @@ exports.create_task_post = [
             return;
         }
         else{
-            //data is valid && create new task object with trimmed and validated data
-            var task = new Task({
-                title: req.body.title,
-                description: req.body.description,
-                due_date: req.body.due_date,
-                board: undefined
-            });
-            task.save(function(err){
+            if(req.body.board == '' || req.body.board === ""){
+                req.body.board = 'random';
+            }
+            //console.log(req.body.board);
+            Board.findOne({
+                name: req.body.board.toLowerCase()
+            }).exec(function(err, results){
                 if(err)
-                    return next(err);
-                res.redirect(task.url);
-            });
+                    return handleError(err);
+                if(results !== null){
+                    const task = new Task({
+                        title: req.body.title,
+                        description: req.body.description,
+                        due_date: req.body.due_date,
+                        board: results._id
+                    });
+                    task.save(function(err){
+                        if(err)
+                            return next(err);
+                        res.redirect('/');
+                    });
+                }else{
+                    const board = new Board({
+                        _id: new mongoose.Types.ObjectId(),
+                        name: req.body.board.toLowerCase()
+                    });
+
+                    board.save(function(err){
+                        if(err)
+                            return next(err);
+                        const task = new Task({
+                            title: req.body.title,
+                            description: req.body.description,
+                            due_date: req.body.due_date,
+                            board: board._id
+                        });
+                        task.save(function(err){
+                            if(err)
+                                return next(err);
+                            res.redirect('/');
+                        });
+                    })
+                }
+            })
+            //data is valid && create new task object with trimmed and validated data
+            
         }
     }
 ]
 
 //Display create Task
 exports.create_task_get = (req, res, next) => {
-    res.render('todo/add_task', {title: 'new task'});
+    const currentDate = new Date(Date.now());
+    const today = DateTime.fromJSDate(currentDate).toLocaleString(DateTime.DATE_SHORT);
+    res.render('todo/add_task', {title: 'new task', date:today});
 }
 
 
@@ -48,13 +86,23 @@ exports.create_task_get = (req, res, next) => {
 exports.get_tasks = (req, res, next) => {
     const date = new Date(Date.now());
     const currentDate = DateTime.fromJSDate(date).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY);
-    Task.find()
-    .sort({due_date: 1})
-    .exec((err, task_list) =>{
+    async.parallel({
+        tasks: function(callback){
+            Task.find()
+            .sort({due_date: 1})
+            .populate('board')
+            .exec(callback)
+        },
+        boards: function(callback){
+            Board.find()
+            .sort({name: 1})
+            .exec(callback)
+        }
+    }, function (err, results){
         if(err)
             return next(err);
-        res.render('todo/all_tasks', {title: 'All Tasks', tasks: task_list, currentDate: currentDate});
-    });
+        res.render('todo/all_tasks', {title: 'All Tasks', results: results, currentDate: currentDate});
+    })
 };
 
 //Display single Task

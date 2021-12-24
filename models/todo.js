@@ -48,4 +48,4 @@ TaskSchema.virtual('day').get(function(){
 })
 
 
-module.exports = mongoose.model('task', TaskSchema);
+module.exports = mongoose.model('Task', TaskSchema);

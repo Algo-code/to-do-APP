@@ -14,22 +14,22 @@ html(lang="en")
 
     body
         div(class="split left")
-            h3 Task Boards
-            li 
+            h1.board__title Task Boards
+            if results.boards.length > 0
+                each board in results.boards 
+                    .side__board 
+                        a.board__nav(href="/board/"+board._id) #{board.name}
+                button(class="btn btn__board") Add Board
+            else 
+                button(class="btn btn__board") Add Board
+
 
             
         div(class="split right")
-            section(class="top__items") 
-                span.chev1(class="material-icons md64") arrow_back_ios 
-                h2 #{currentDate}
-                span.chev2(class="material-icons md64") arrow_forward_ios
-            section(class="right__end")
-                button.btn
-                    a.to__tc(href="/task/create") Add Task
-            br
+            
             section(class="cards")
-                if tasks.length > 0
-                    each task in tasks 
+                if results.tasks.length > 0
+                    each task in results.tasks 
                         article(class="card card--1")
                             div(class="card__img")
                                 
@@ -38,14 +38,20 @@ html(lang="en")
                                     path(fill="#000000" d="")
                                 div(class="task__delete")
                                     span.icon__btn(class="material-icons md24") delete
-                                span.calen(class="material-icons md24") calendar_month
-                                h1 #{task.day}
+                                //- span.calen(class="material-icons md24") calendar_month
+                                h1.img__date #{task.day}
                             a(href="#" class="card__link")                                   
                                 div(class="card__img--hover")
                             div(class="card__info")
                                 span(class="card__title") #{task.title}
                                 h3(class="card__description") #{task.description}
-                                p(class="card__board") #{task.board}
+                                p(class="card__board") #{task.board.name}
                                 span(class="task__due") #{task.weekday}
                 else 
                     h2 You Do Not Have Any Tasks!
+            section(class="top__items") 
+                span.chev1(class="material-icons md64") arrow_back_ios 
+                h2 #{currentDate}
+                span.chev2(class="material-icons md64") arrow_forward_ios
+                button.btn
+                    a.to__tc(href="/task/create") Add Task

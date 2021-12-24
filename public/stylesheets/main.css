@@ -7,9 +7,8 @@
 */
 .split{
     height: 100%;
-    width: 80%;
+    width: 100%;
     position: fixed;
-    z-index: 1;
     top: 0;
     overflow-x: hidden;
     padding-top: 20px;
@@ -22,11 +21,6 @@
     background-color: purple;
 }
 
-/*Control right side*/
-.right{
-    right: 0;
-    font-family: 'Roboto', sans-serif;
-}
 
 .l__items{
     display: inline-block;
@@ -39,17 +33,6 @@
     padding-left: 10px;
     width: 100%;
 }
-/* .task__card{
-    width: 70%;
-}
-.task__action{
-    width: 30%;
-} */
-
-/* 
-.list{
-    background-color: aquamarine;
-} */
 
 .centered{
     position: absolute;
@@ -60,13 +43,17 @@
     background-color: black;
 }
 .right{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     position: absolute;
     top: 30%;
     left: 100%;
     transform: translate(-100%, -30%);
     text-align: left;
-    display: grid;
     width: 78%;
+    right: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
 .div__align{

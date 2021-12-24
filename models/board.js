@@ -15,4 +15,4 @@ BoardSchema.virtual('url').get(function(){
     return '/task/board/' + this._id;
 });
 
-module.exports = mongoose.model('board', BoardSchema);
+module.exports = mongoose.model('Board', BoardSchema);
