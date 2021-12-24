@@ -63,6 +63,22 @@ body, html {
     text-align: center;
     vertical-align: middle;
 }
+.img__date{
+    font-size: 72px;
+    font-family: 'Roboto', serif;
+    font-weight: 700;
+    top: 0px;
+    text-align: center;
+    padding-top: 0;
+    margin-top: -10px;
+    margin-left: 0; 
+}
+
+.board__title{
+    font-size: 36px;
+    color: #eee;
+
+}
 
 h2{
     font-size: 48px;
@@ -131,12 +147,16 @@ h2{
     display: block;
     text-align: center;
     height: 50px;
-    background-color: rgb(90, 1, 90);
-    width: 100%;
+    /* background-color: rgb(90, 1, 90); */
+    background-color: transparent;
+    border-top: #fff;
+    width: 90%;
+    margin-left: 5%;
     padding-top: 15px;
-    border-bottom: 1px, solid, black;
-    border-color: black;
-    /* margin-bottom: 5px; */
+}
+
+.side__board:hover{
+    background-color: rgba(90, 0, 90);
 }
 
 .board__nav{
@@ -162,18 +182,11 @@ h2{
     background-color: rgb(63, 0, 63);
 }
 
-h1 {
-    font-size: 72px;
-    padding: 0;
-    top: 0;
-    margin-top: 5px;
-    vertical-align: top;
+.left__title{
     width: 100%;
-    position:absolute;
-    align-content: center;
-    text-align: center;
-    color: purple;
-    
+    background-color: transparent;
+    color: #fff;
+    font-size: 36px;
 }
 
 .card__info--hover {

@@ -5,6 +5,7 @@ const async = require("async");
 const {body, validationResult} = require("express-validator");
 const Board = require("../models/board");
 const mongoose = require("mongoose");
+const { getMaxListeners } = require("../models/todo");
 
 
 //create task
@@ -126,21 +127,32 @@ exports.get_task = (req, res, next)  => {
 
 //Display Task by Board category
 exports.get_task_board = (req, res, next) => {
+    console.log(req.params);
     async.parallel({
-        board_tasks: function(callback){
-            Task.find({'board': req.params.board}).exec(callback)
+        AllBoards: function(callback){
+            Board.find()
+            .sort({name: 1})
+            .exec(callback)
+        },
+        board: function(callback){
+            Board.findById(req.params.board)
+            .exec(callback)
+        },
+        tasks: function(callback){
+            Task.find({'board':req.params.board})
+            .populate('board')
+            .exec(callback)
         }
     }, function(err, results){
-        if(err){
-            return next(err);
-        }
-        if(results.board_tasks == null){
-            var err = new Error('No Tasks Found');
+        if(err)
+            return next(err)
+        if(results.board === null){
+            var err = new Error('Board Not Found');
             err.status = 404;
             return next(err);
         }
 
-        res.render('board_tasks', {title: 'board tasks', tasks: results.board_tasks});
-    });
+        res.render('todo/board_tasks', {title: results.board.name, tasks: results.tasks, boards:results.AllBoards})
+    })
 };
 

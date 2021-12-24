@@ -19,8 +19,8 @@ html(lang="en")
             br
             .side__board(style="border-bottom: 1px solid rgba(90, 0, 90)")
                 a.board__nav(href="/board/all") All
-            if results.boards.length > 0
-                each board in results.boards 
+            if boards.length > 0
+                each board in boards 
                     .side__board(style="border-bottom: 1px solid rgba(90, 0, 90)") 
                         a.board__nav(href="/board/"+board._id) #{board.name}
                 button(class="btn btn__board") Add Board
@@ -32,8 +32,8 @@ html(lang="en")
         div(class="split right")
             
             section(class="cards")
-                if results.tasks.length > 0
-                    each task in results.tasks 
+                if tasks.length > 0
+                    each task in tasks 
                         article(class="card card--1")
                             div(class="card__img")
                                 
@@ -52,10 +52,10 @@ html(lang="en")
                                 p(class="card__board") #{task.board.name}
                                 span(class="task__due") #{task.weekday}
                 else 
-                    h2 You Do Not Have Any Tasks!
+                    h2 This board has no tasks!
             section(class="top__items") 
                 span.chev1(class="material-icons md64") arrow_back_ios 
-                h2 #{currentDate}
+                h2 #{title}
                 span.chev2(class="material-icons md64") arrow_forward_ios
                 button.btn
                     a.to__tc(href="/task/create") Add Task
