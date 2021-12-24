@@ -1,19 +1,14 @@
-<!DOCTYPE html>
+doctype html
 html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        meta(http-equiv="X-UA-Compatible", content="ie=edge")
-        title #{title}
-        block styles
-    body   
-        header.main-header
-            nav.main-header__nav
-                ul.main-header__item-list
-                    li.main-header__item
-                        a(href="/", class=(path === '/' ? 'active' : '')) Tasks
-                    li.main-header__item
-                        a(href="/shop/product-list", class=(path === '/products' ? 'active' : '')) Collections
-                    li.main-header__item
-                        a(href="/shop/cart", class=(path === '/cart' ? 'active' : '')) Dashboard
-        block content
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/stylesheets/main.css")
+    link(rel="stylesheet", href="/stylesheets/task_card.css")
+    link(rel="stylejs", href="/javascripts/main.js")
+    link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
+    link(href='https://css.gg/calendar.css' rel='stylesheet')
+    link(rel="stylesheet" href="/icons/font-awesome/css/font-awesome.css")
+    
+    block content

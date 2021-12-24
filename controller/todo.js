@@ -152,7 +152,7 @@ exports.get_task_board = (req, res, next) => {
             return next(err);
         }
 
-        res.render('todo/board_tasks', {title: results.board.name, tasks: results.tasks, boards:results.AllBoards})
+        res.render('todo/board_tasks', {title: results.board.name, tasks: results.tasks, boards:results.AllBoards, path: '/board/'+results.board._id})
     })
 };
 

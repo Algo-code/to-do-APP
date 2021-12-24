@@ -146,17 +146,29 @@ h2{
 .side__board{
     display: block;
     text-align: center;
-    height: 50px;
-    /* background-color: rgb(90, 1, 90); */
+    height: 40px;
+    border-bottom: 1px solid rgba(90, 0, 90);
+     /* background-color: rgb(90, 1, 90);  */
     background-color: transparent;
     border-top: #fff;
     width: 90%;
+    margin-top: 5px;
     margin-left: 5%;
-    padding-top: 15px;
+    padding-top: 10px;
+    list-style: none;
 }
 
 .side__board:hover{
-    background-color: rgba(90, 0, 90);
+    cursor: pointer;
+    border-bottom: 5px solid rgba(90, 0, 90);
+    /* background-color: rgba(90, 0, 90); */
+    /* border-top-left-radius: 5px;
+    border-top-right-radius: 5px; */
+}
+
+.side__board:active{
+    cursor: pointer;
+    border-bottom: 5px solid rgba(90, 0, 90);
 }
 
 .board__nav{

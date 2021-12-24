@@ -17,12 +17,12 @@ html(lang="en")
             .left__title
                 h1.board__title Task Boards
             br
-            .side__board(style="border-bottom: 1px solid rgba(90, 0, 90)")
-                a.board__nav(href="/board/all") All
+            li.side__board
+                a.board__nav(href="/board/all", class=(path === '/board/all' ? 'active' : '')) All
             if boards.length > 0
                 each board in boards 
-                    .side__board(style="border-bottom: 1px solid rgba(90, 0, 90)") 
-                        a.board__nav(href="/board/"+board._id) #{board.name}
+                    li.side__board 
+                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name}
                 button(class="btn btn__board") Add Board
             else 
                 button(class="btn btn__board") Add Board

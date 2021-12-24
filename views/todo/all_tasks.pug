@@ -17,26 +17,26 @@ html(lang="en")
             .left__title
                 h1.board__title Task Boards
             br
-            .side__board(style="border-bottom: 1px solid rgba(90, 0, 90)")
-                a.board__nav(href="/board/all") All
+            li.side__board
+                a.board__nav(href="/board/all", class=(path === '/board/all' ? 'active' : '')) All
             if results.boards.length > 0
                 each board in results.boards 
-                    .side__board(style="border-bottom: 1px solid rgba(90, 0, 90)") 
-                        a.board__nav(href="/board/"+board._id) #{board.name}
+                    li.side__board 
+                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name}
                 button(class="btn btn__board") Add Board
             else 
                 button(class="btn btn__board") Add Board
 
 
             
-        div(class="split right")
+        div(class="split right")           
             
             section(class="cards")
                 if results.tasks.length > 0
                     each task in results.tasks 
                         article(class="card card--1")
                             div(class="card__img")
-                                
+                                        
                                 div(class="card__info-hover")
                                     svg(class="task__done" viewBox="0 0 24 24")
                                     path(fill="#000000" d="")
@@ -55,7 +55,7 @@ html(lang="en")
                     h2 You Do Not Have Any Tasks!
             section(class="top__items") 
                 span.chev1(class="material-icons md64") arrow_back_ios 
-                h2 #{currentDate}
+                h2 All Tasks
                 span.chev2(class="material-icons md64") arrow_forward_ios
                 button.btn
                     a.to__tc(href="/task/create") Add Task
