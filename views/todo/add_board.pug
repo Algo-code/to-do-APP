@@ -1,0 +1,34 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/stylesheets/form.css")
+    script(type='text/javascript' src='/javascripts/form.js')
+    link(rel="form", href="/javascripts/form.js")
+    
+
+    title #{title}
+  body 
+    .form__control
+        form.new__task(action="/create", method="POST")
+            .inline 
+                h2.add Add 
+                h2.todo Board
+
+            label(for="name")
+                input(list="boards", type="text", placeholder="board name", name="name")#name
+                span Board
+                datalist(id="boards")
+                    option(value="random")
+                    option(value="work")
+                    option(value="school")
+                    option(value="personal")
+                    option(value="home")
+            .btn__task
+                a(href="/")
+                    button.cancel__btn(type="button") Cancel
+                    
+                button.add__btn(type="submit") Add
+            

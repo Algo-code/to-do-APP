@@ -5,7 +5,7 @@ const async = require("async");
 const {body, validationResult} = require("express-validator");
 const Board = require("../models/board");
 const mongoose = require("mongoose");
-const { getMaxListeners } = require("../models/todo");
+const { getMaxListeners, count } = require("../models/todo");
 
 const date = new Date(Date.now());
 const currentDate = DateTime.fromJSDate(date).toLocaleString(DateTime.DATE_SHORT);
@@ -15,7 +15,6 @@ exports.create_task_post = [
     body('title', 'Task title can not be empty.').trim().isLength({min:1, max:15}).escape(),
     body('description', 'Use description to add more details').optional({checkFalsy: true}).trim().isLength({max:150}).escape(),
     body('due_date', 'Invalid date').isISO8601().toDate(),
-    body('board', 'Task Category').optional({checkFalsy:true}).trim().escape(),
 
     //process request after validation and sanitization
     (req, res, next) => {
@@ -27,71 +26,75 @@ exports.create_task_post = [
             return;
         }
         else{
-            if(req.body.board == '' || req.body.board === ""){
-                req.body.board = 'random';
-            }
             //console.log(req.body.board);
-            Board.findOne({
-                name: req.body.board.toLowerCase()
-            }).exec(function(err, results){
+            const task  = Task({
+                _id: mongoose.Types.ObjectId(),
+                title: req.body.title,
+                description: req.body.description,
+                due_date: req.body.due_date,
+                status: 'new'
+            });
+            task.save(function(err){
                 if(err)
-                    return handleError(err);
-                if(results !== null){
-                    const task = new Task({
-                        title: req.body.title,
-                        description: req.body.description,
-                        due_date: req.body.due_date,
-                        board: results._id
-                    });
-                    task.save(function(err){
-                        if(err)
-                            return next(err);
-                        res.redirect('/');
-                    });
-                }else{
-                    const board = new Board({
-                        _id: new mongoose.Types.ObjectId(),
-                        name: req.body.board.toLowerCase()
-                    });
-
+                    return next(err);
+                Board.findById(req.params.board, function(err, board){
+                    if(err)
+                        return next(err);
+                    board.tasks.push(task._id);
                     board.save(function(err){
                         if(err)
                             return next(err);
-                        const task = new Task({
-                            title: req.body.title,
-                            description: req.body.description,
-                            due_date: req.body.due_date,
-                            board: board._id
-                        });
-                        task.save(function(err){
-                            if(err)
-                                return next(err);
-                            res.redirect('/');
-                        });
+                        res.redirect(board.url);
                     })
-                }
-            })
-            //data is valid && create new task object with trimmed and validated data
-            
+                });
+                //res.redirect('/');
+            });
         }
     }
 ]
 
 //Display create Task
 exports.create_task_get = (req, res, next) => {
-    const currentDate = new Date(Date.now());
-    const today = DateTime.fromJSDate(currentDate).toLocaleString(DateTime.DATE_SHORT);
-    res.render('todo/add_task', {title: 'new task', date:today});
+    console.log('get task: '+req.params._id+' '+ req.params.board);
+    res.render('todo/add_task', {title: 'new task', date:currentDate, board_id: req.params.board});
 }
 
+//display create Board
+exports.create_board_get = (req, res, next) => {
+    res.render('todo/add_board', {title: 'Add Board'});
+}
+
+// Create Board Post controller
+exports.create_board_post = [
+    body('name', 'board name can not be empty.').trim().isLength({min:1, max:15}).escape(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+
+        if(!errors.isEmpty){
+            res.render('todo/add_board',{title: 'Add Board', board: req.body, errors: errors.array()});
+            return;
+        }
+        else{
+            const board = new Board({
+                name: req.body.name.toLowerCase(),
+                tasks: new Array(),
+            });
+            board.save(function(err){
+                if(err)
+                    return next(err);
+                res.redirect('/')
+            })
+        }
+    }
+]
 
 //Display all Tasks
 exports.get_tasks = (req, res, next) => {
     async.parallel({
-        tasks: function(callback){
-            Task.find({due_date: {$gte: currentDate}})
-            .sort({due_date: 1})
-            .populate('board')
+        task_boards: function(callback){
+            Board.find()
+            .populate({path: 'tasks', options: { sort: {'due_date': '1'} }})
+            .sort({name: 1})
             .exec(callback)
         },
         boards: function(callback){
@@ -127,32 +130,27 @@ exports.get_task = (req, res, next)  => {
 
 //Display Task by Board category
 exports.get_task_board = (req, res, next) => {
-    console.log(req.params);
     async.parallel({
-        AllBoards: function(callback){
+        boards: function(callback){
             Board.find()
             .sort({name: 1})
             .exec(callback)
         },
-        board: function(callback){
+        board_tasks: function(callback){
             Board.findById(req.params.board)
+            .populate({path: 'tasks', options: { sort: {'due_date': '1'} }})
+            .sort({name: 1})
             .exec(callback)
         },
-        tasks: function(callback){
-            Task.find({'board':req.params.board, due_date: {$gte: currentDate}})
-            .populate('board')
-            .exec(callback)
-        }
     }, function(err, results){
         if(err)
             return next(err)
-        if(results.board === null){
+        if(results.board_tasks === null){
             var err = new Error('Board Not Found');
             err.status = 404;
             return next(err);
         }
-
-        res.render('todo/board_tasks', {title: results.board.name, tasks: results.tasks, boards:results.AllBoards, path: '/board/'+results.board._id})
+        res.render('todo/board_tasks', {title: results.board_tasks.name,  current_board: results.board_tasks, tasks: results.board_tasks.tasks, boards:results.boards, path: '/board/'+results.board_tasks._id})
     })
 };
 

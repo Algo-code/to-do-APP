@@ -13,9 +13,9 @@ const TaskSchema = mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-    board: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref:'Board',
+    status:{
+        type: String,
+        default: "new"
     }
 });
 

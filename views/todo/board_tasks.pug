@@ -10,7 +10,7 @@ html(lang="en")
     link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
     link(href='https://css.gg/calendar.css' rel='stylesheet')
     link(rel="stylesheet" href="/icons/font-awesome/css/font-awesome.css")
-    title Tasks
+    title #{title}
 
     body
         div(class="split left")
@@ -18,14 +18,13 @@ html(lang="en")
                 h1.board__title Task Boards
             br
             li.side__board
-                a.board__nav(href="/board/all", class=(path === '/board/all' ? 'active' : '')) All
+                a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All
             if boards.length > 0
                 each board in boards 
                     li.side__board 
-                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name}
-                button(class="btn btn__board") Add Board
-            else 
-                button(class="btn btn__board") Add Board
+                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name} (#{board.count})
+            button(class="btn btn__board")
+                a.to__tc(href="board/create") Add Board
 
 
             
@@ -49,7 +48,7 @@ html(lang="en")
                             div(class="card__info")
                                 span(class="card__title") #{task.title}
                                 h3(class="card__description") #{task.description}
-                                p(class="card__board") #{task.board.name}
+                                p(class="card__board") #{current_board.name}
                                 span(class="task__due") #{task.weekday}
                 else 
                     h2 This board has no tasks!
@@ -58,4 +57,4 @@ html(lang="en")
                 h2 #{title}
                 span.chev2(class="material-icons md64") arrow_forward_ios
                 button.btn
-                    a.to__tc(href="/task/create") Add Task
+                    a.to__tc(href= current_board._id+'/task/create') Add Task

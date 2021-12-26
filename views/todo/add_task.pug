@@ -12,7 +12,7 @@ html(lang="en")
     title #{title}
   body 
     .form__control
-        form.new__task(action="/task/create", method="POST")
+        form.new__task(action='/board/'+board_id+'/task/create', method="POST")
             .inline 
                 h2.add Add 
                 h2.todo Task
@@ -23,15 +23,15 @@ html(lang="en")
             label(for="description" )
                 TextArea(type="text", maxlength="128",placeholder="Task Description", required=true, name="description")#description
                 span Description
-            label(for="board")
-                input(list="boards", type="text", placeholder="Task category", name="board")#board
-                span Board
-                datalist(id="boards")
-                    option(value="random")
-                    option(value="work")
-                    option(value="school")
-                    option(value="personal")
-                    option(value="home")
+            //- label(for="board")
+            //-     input(list="boards", type="text", placeholder="Task category", name="board")#board
+            //-     span Board
+            //-     datalist(id="boards")
+            //-         option(value="random")
+            //-         option(value="work")
+            //-         option(value="school")
+            //-         option(value="personal")
+            //-         option(value="home")
             label(for="due_date")
                 input(type="date", placeholder="due date" required=true, name="due_date")#due_date 
                 //span Date

@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/user', userRouter);
-app.use('/task',todoRouter);
+app.use('/board',todoRouter);
 app.use('/', todoRouter);
 
 // catch 404 and forward to error handler
