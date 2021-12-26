@@ -18,7 +18,7 @@ html(lang="en")
                 h1.board__title Task Boards
             br
             li.side__board
-                a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All (#{all_count})
+                a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All (#{results.tasks.length})
             block content
             if results.boards.length > 0
                 each board in results.boards 
@@ -33,29 +33,25 @@ html(lang="en")
         div(class="split right")           
             
             section(class="cards")
-                if results.task_boards.length > 0
-                    each board in results.task_boards
-                        if board.tasks !== null && board.tasks.length > 0
-                            each task in board.tasks
-                                article(class="card card--1")
-                                    div(class="card__img")
+                if results.tasks.length > 0
+                    each task in results.tasks
+                        article(class="card card--1")
+                            div(class="card__img")
                                                 
-                                        div(class="card__info-hover")
-                                            svg(class="task__done" viewBox="0 0 24 24")
-                                            path(fill="#000000" d="")
-                                        div(class="task__delete")
-                                            span.icon__btn(class="material-icons md24") delete
+                                div(class="card__info-hover")
+                                    svg(class="task__done" viewBox="0 0 24 24")
+                                    path(fill="#000000" d="")
+                                div(href="/task/delete",class="task__delete")
+                                    span.icon__btn( class="material-icons md24") delete
                                         //- span.calen(class="material-icons md24") calendar_month
-                                        h2.img__date #{task.day}
-                                    a(href="#" class="card__link")                                   
-                                        div(class="card__img--hover")
-                                    div(class="card__info")
-                                        span(class="card__title") #{task.title}
-                                        h3(class="card__description") #{task.description}
-                                        p(class="card__board") #{board.name}
-                                        span(class="task__due") #{task.weekday}
-                         
-                            
+                                h2.img__date #{task.day}
+                            a(href="#" class="card__link")                                   
+                                div(class="card__img--hover")
+                            div(class="card__info")
+                                span(class="card__title") #{task.title}
+                                h3(class="card__description") #{task.description}
+                                //p(class="card__board") #{board.name}
+                                span(class="task__due") #{task.weekday}           
                 else 
                     h2 You Do Not Have Any Tasks!
             section(class="top__items") 

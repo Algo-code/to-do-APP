@@ -91,10 +91,9 @@ exports.create_board_post = [
 //Display all Tasks
 exports.get_tasks = (req, res, next) => {
     async.parallel({
-        task_boards: function(callback){
-            Board.find()
-            .populate({path: 'tasks', options: { sort: {'due_date': '1'} }})
-            .sort({name: 1})
+        tasks: function(callback){
+            Task.find()
+            .sort({'due_date': '1'})
             .exec(callback)
         },
         boards: function(callback){
