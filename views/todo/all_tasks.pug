@@ -27,6 +27,9 @@ html(lang="en")
              
             button(class="btn btn__board")
                 a.to__tc(href="board/create") Add Board
+            form.logout(action="/logout", method="POST")
+                input(type="hidden", name="_csrf", value= csrfToken)
+                button(type="submit",class="btn logout")
 
 
             

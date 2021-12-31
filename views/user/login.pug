@@ -17,14 +17,15 @@ html(lang="en")
         .centered 
             h1.page__title Sign In
             br
-            form.user__form(target="", action="/user/login", method="POST")
+            form.user__form(target="", action="/login", method="POST")
                 .form__control 
                     input(type="text", placeholder="Enter email address", required=true, name="email")#email
                     br
                     input(type="password", placeholder="Enter Password", required=true, name="password")#password
                     br 
                     
-                //button.btn(type="submit") Login
-                input.btn(onclick="window.location.href = 'http://localhost:4000/user/me'; " type="submit" value="Login")
+                input(type="hidden", name="_csrf", value= csrfToken)
+                button.btn(type="submit") Login
+                //- input.btn(onclick="window.location.href = 'http://localhost:4000/user/me'; " type="submit" value="Login")
                 br
-                a(href="/user/signup", class="to__login") Don't have an account? Signup here
+                a(href="/signup", class="to__login") Don't have an account? Signup here

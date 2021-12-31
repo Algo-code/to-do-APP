@@ -19,12 +19,9 @@ html(lang="en")
             br
             p.par 2DO Helps you manage your day to day routines in one cohesive and tidy space. Signup now to improve your productivity.
             br
-            form.user__form(action="/user/signup", method="POST")
+            form.user__form(action="/signup", method="POST")
                 .form__control 
-                    //label(for="username") Username 
-                    input(type="text", placeholder="Username", required=true, name="username")#username
                     //label(for="email" ) Email 
-                    br
                     input(type="text", placeholder="Enter email address", required=true, name="email")#email
                     //label(for="password") Password 
                     br
@@ -33,9 +30,11 @@ html(lang="en")
                     br 
                     input(type="password", placeholder="Confirm Password" required=true, name="confirmPassword")#confirmPassword
                     br
+                    
                     label(class="container") I agree to the terms and conditions 
                         input(type="checkbox")
                         span(class="checkmark")
+                input(type="hidden", name="_csrf", value= csrfToken)
                 button.btn(type="submit") register
                 br
                 a(href="/user/login", class="to__login") Already have an account? Login here

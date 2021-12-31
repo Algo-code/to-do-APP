@@ -24,7 +24,11 @@ html(lang="en")
                     li.side__board 
                         a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name} (#{board.count})
             button(class="btn btn__board")
-                a.to__tc(href="board/create") Add Board
+                a.to__tc(href="/board/create") Add Board
+            form.logout(action="/logout", method="POST")
+                input(type="hidden", name="_csrf", value= csrfToken)
+                button(type="submit",class="btn logout")
+            
 
 
             
