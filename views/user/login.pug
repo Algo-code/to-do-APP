@@ -4,28 +4,33 @@ html(lang="en")
     meta(charset="UTF-8")
     meta(http-equiv="X-UA-Compatible", content="IE=edge")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    link(rel="stylesheet", href="/stylesheets/main.css")
+    link(rel="stylesheet", href="/stylesheets/auth.css")
+    link(rel="stylesheet", href="/stylesheets/form.css")
     link(rel="stylejs", href="/javascripts/main.js")
     title Signin
   body 
     div(class="split left") 
         .centered 
-            h2 To-do List App 
+            h2.h4 Task Buddy 
             p An awesome app to save your todo works 
 
     div(class="split right") 
         .centered 
-            h1.page__title Sign In
-            br
-            form.user__form(target="", action="/login", method="POST")
-                .form__control 
-                    input(type="text", placeholder="Enter email address", required=true, name="email")#email
-                    br
-                    input(type="password", placeholder="Enter Password", required=true, name="password")#password
-                    br 
-                    
-                input(type="hidden", name="_csrf", value= csrfToken)
-                button.btn(type="submit") Login
-                //- input.btn(onclick="window.location.href = 'http://localhost:4000/user/me'; " type="submit" value="Login")
-                br
-                a(href="/signup", class="to__login") Don't have an account? Signup here
+            .form__control
+                form.new__task(target="", action="/login", method="POST")
+                    .inline
+                      h4.h4 Sign In 
+                      p.p1 Create and manage all your tasks with task buddy.
+                      p.p2 Task Buddy lets you keep track of your tasks and lets you share or assign tasks to someone 
+                    label(for="email")
+                      input(type="text", placeholder="Enter email address", required=true, name="email")#email
+                      span Email
+                    label(for="password")
+                      input(type="password", placeholder="Enter Password", required=true, name="password")#password
+                      span password
+                        
+                    input(type="hidden", name="_csrf", value= csrfToken)
+                    .cntr
+                      button.login__btn(type="submit") Login
+                      //- input.btn(onclick="window.location.href = 'http://localhost:4000/user/me'; " type="submit" value="Login")
+                      a.link(href="/signup", class="to__login") Don't have an account? Signup here

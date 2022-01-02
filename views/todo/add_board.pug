@@ -12,7 +12,7 @@ html(lang="en")
     title #{title}
   body 
     .form__control
-        form.new__task(action="/create", method="POST")
+        form.new__task(action="/board/create", method="POST")
             .inline 
                 h2.add Add 
                 h2.todo Board
@@ -26,6 +26,7 @@ html(lang="en")
                     option(value="school")
                     option(value="personal")
                     option(value="home")
+            input(type="hidden", name="_csrf", value= csrfToken)
             .btn__task
                 a(href="/")
                     button.cancel__btn(type="button") Cancel
