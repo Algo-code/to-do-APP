@@ -41,6 +41,12 @@ var SharedBoardSchema = new Schema({
         priority: {
             type: Number,
             default: 1
+        },
+        day: {
+            type: String,
+        },
+        weekday: {
+            type: String,
         }
     }],
     // shared:{

@@ -15,15 +15,25 @@ html(lang="en")
     body
         div(class="split left")
             .left__title
-                h1.board__title Task Boards
+                h1.board__title My Boards
             br
-            li.side__board
-                a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All (#{results.tasks.length})
+            
             block content
-            if results.boards.length > 0
-                each board in results.boards 
+            if results.myBoards.length > 0
+                li.side__board
+                    a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All (#{results.myBoards.tasks.length + results.sharedBoards.tasks.length})
+                each board in results.myBoards 
                     li.side__board 
-                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name} (#{board.count})
+                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
+            else 
+                li.side__board
+                    a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All 
+
+            if results.sharedBoards.length > 0
+                h1.board__title Shared Boards
+                each board in results.sharedBoards 
+                    li.side__board 
+                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
              
             button(class="btn btn__board")
                 a.to__tc(href="board/create") Add Board
@@ -36,25 +46,26 @@ html(lang="en")
         div(class="split right")           
             
             section(class="cards")
-                if results.tasks.length > 0
-                    each task in results.tasks
-                        article(class="card card--1")
-                            div(class="card__img")
-                                                
-                                div(class="card__info-hover")
-                                    svg(class="task__done" viewBox="0 0 24 24")
-                                    path(fill="#000000" d="")
-                                div(href="/task/delete",class="task__delete")
-                                    span.icon__btn( class="material-icons md24") delete
-                                        //- span.calen(class="material-icons md24") calendar_month
-                                h2.img__date #{task.day}
-                            a(href="#" class="card__link")                                   
-                                div(class="card__img--hover")
-                            div(class="card__info")
-                                span(class="card__title") #{task.title}
-                                h3(class="card__description") #{task.description}
-                                //p(class="card__board") #{board.name}
-                                span(class="task__due") #{task.weekday}           
+                if results.myBoards.length > 0
+                    each board in results.myBoards 
+                        each task in board.tasks
+                            article(class="card card--1")
+                                div(class="card__img")
+                                                    
+                                    div(class="card__info-hover")
+                                        svg(class="task__done" viewBox="0 0 24 24")
+                                        path(fill="#000000" d="")
+                                    div(href="/task/delete",class="task__delete")
+                                        span.icon__btn( class="material-icons md24") delete
+                                            //- span.calen(class="material-icons md24") calendar_month
+                                    h2.img__date #{task.day}
+                                a(href="#" class="card__link")                                   
+                                    div(class="card__img--hover")
+                                div(class="card__info")
+                                    span(class="card__title") #{task.title}
+                                    h3(class="card__description") #{task.description}
+                                    //p(class="card__board") #{board.name}
+                                    span(class="task__due") #{task.weekday}           
                 else 
                     h2 You Do Not Have Any Tasks!
             section(class="top__items") 

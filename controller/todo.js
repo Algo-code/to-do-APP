@@ -14,6 +14,34 @@ const currentDate = DateTime.fromJSDate(date).toLocaleString(
   DateTime.DATE_SHORT
 );
 
+function getDay (dueDate) {
+  return dueDate.getDate();
+};
+
+function getWeekday (dueDate) {
+  var due_date = DateTime.fromJSDate(dueDate).toLocaleString(DateTime.DATE_SHORT);
+  const today = Date.now();
+  const diffTime = dueDate - today;
+  const diffDays = Math.ceil(diffTime/(1000 * 60 * 60 * 24));
+
+  if(diffDays > 5 || diffDays < -1){
+      return due_date
+  }
+  else if(diffDays == 0){
+      return 'Today';
+  }
+  else if(diffDays == 1){
+      return 'Tomorrow';
+  }
+  else if(diffDays == -1){
+      return 'Yesterday';
+  }
+  else{
+      const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      return weekday[dueDate.getDay()];
+  }
+}
+
 //create task for myBoard
 exports.create_myTask_post = [
   body("title", "Task title can not be empty.")
@@ -48,6 +76,8 @@ exports.create_myTask_post = [
         dueDate: req.body.due_date,
         status: "new",
         timeStamp: date,
+        day: getDay(req.body.due_date),
+        weekday: getWeek(req.body.due_date),
       });
       task.save(function (err) {
         if (err) return next(err);
@@ -102,6 +132,8 @@ exports.create_sharedTask_post = [
         priority: req.body.priority,
         createdBy: req.user._id,
         assignedTo: new Array(),
+        day: getDay(req.body.due_date),
+        weekday: getWeek(req.body.due_date),
       });
       task.save(function (err) {
         if (err) return next(err);
@@ -249,6 +281,7 @@ exports.get_tasks = (req, res, next) => {
     },
     function (err, results) {
       if (err) return next(err);
+      console.log(results);
       res.render("todo/all_tasks", {
         title: "All Tasks",
         results: results,

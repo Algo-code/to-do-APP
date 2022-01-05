@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {DateTime} = require('luxon')
 
 const Schema = mongoose.Schema;
 
@@ -19,7 +20,8 @@ var BoardSchema = new Schema({
         },
         dueDate:{
             type: Date,
-            default: Date.now()
+            default: Date.now(),
+            required: true,
         },
         status:{
             type: String,
@@ -29,6 +31,12 @@ var BoardSchema = new Schema({
             type: Date,
             default: Date.now()
         },
+        day: {
+            type: String,
+        },
+        weekday: {
+            type: String,
+        }
     }],
 });
 
@@ -38,7 +46,7 @@ BoardSchema.virtual('url').get(function(){
 
 BoardSchema.virtual('task_count').get(function(){
     return this.tasks.length;
-})
+});
 
 
 module.exports = mongoose.model('MyBoard', BoardSchema);
