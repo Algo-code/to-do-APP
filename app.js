@@ -11,6 +11,8 @@ const MONGODB_URI = 'mongodb+srv://algo:algo@cluster0.g6kzb.mongodb.net/Todo-app
 
 const InitiateMongoServer = require("./config/db")
 
+const MyBoard = require('./models/board');
+const SharedBoard = require('./models/shared-board');
 const User = require('./models/user');
 
 const authRouter = require('./routes/auth');

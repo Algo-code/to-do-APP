@@ -41,7 +41,7 @@ BoardSchema.virtual('task_count').get(function(){
 })
 
 
-module.exports = mongoose.model('Board', BoardSchema);
+module.exports = mongoose.model('MyBoard', BoardSchema);
 
 
 

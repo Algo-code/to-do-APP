@@ -19,12 +19,12 @@ const UserSchema =  mongoose.Schema({
     },
     myBoards: [{
         type: mongoose.Schema.Types.ObjectId, 
-        ref:'Board'
+        ref:'MyBoard'
     }],
     sharedBoards:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Shared Board'
+        ref: 'SharedBoard'
     }]
 });
 
-module.exports = mongoose.model("user", UserSchema);
+module.exports = mongoose.model("User", UserSchema);

@@ -79,7 +79,7 @@ exports.post_login = [
 
   (req, res, next) => {
     //extract validation errors
-    const errors = req.validationResult;
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.render("user/login", {
