@@ -29,7 +29,7 @@ html(lang="en")
                         a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All (#{results.boards.myBoards.tasks.length})
                 each board in results.boards.myBoards 
                     li.side__board 
-                        a.board__nav(href="/my_board/"+board._id, class=(path === '/my_board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
+                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
             else 
                 li.side__board
                     a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All 
@@ -44,7 +44,7 @@ html(lang="en")
             if results.boards.sharedBoards.length > 0
                 each board in results.boards.sharedBoards 
                     li.side__board 
-                        a.board__nav(href="/shared_board/"+board._id, class=(path === '/shared_board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
+                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
              
             form.logout(action="/shared_board/create", method="GET") 
                 input(type="hidden", name="_csrf", value= csrfToken)

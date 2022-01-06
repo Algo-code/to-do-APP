@@ -316,6 +316,11 @@ exports.get_task_board = (req, res, next) => {
     function (err, results) {
       if (err) return next(err);
       currentBoard = results.boards.myBoards.find(board => board._id == req.params.boardID);
+      var boardType = 'myBoard';
+      if(!currentBoard){
+        currentBoard = results.boards.sharedBoards.find(board => board._id == req.params.boardID);
+        var boardType = 'sharedBoard';
+      }
       if (!currentBoard) {
         var err = new Error("Board Not Found");
         err.status = 404;
@@ -324,6 +329,7 @@ exports.get_task_board = (req, res, next) => {
       
       res.render("todo/board_tasks", {
         title: currentBoard.name + ' Tasks',
+        boardType: boardType,
         results: results,
         currentBoard: currentBoard,
         path: "/my_board/" /*+results.board_tasks._id*/,

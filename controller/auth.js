@@ -1,4 +1,4 @@
-const { body, validationResult } = require("express-validator");
+const {check, body, validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
@@ -12,21 +12,20 @@ exports.get_signup = (req, res, next) => {
 
 //Signup post controller
 exports.post_signup = [
-  body("email", "Invalid email").trim().isEmail().escape(),
-  body("password", "Invalid Password").isLength({ min: 4 }).escape(),
-  body("confirmPassword", "Invalid Password").isLength({ min: 4 }).escape(),
+  check("email", "Invalid email").trim().isEmail().escape(),
+  check("password", "Invalid Password").isLength({ min: 4 }).escape(),
+  check("confirmPassword", "Invalid Password").isLength({ min: 4 }).escape(),
 
   (req, res, next) => {
     //extract validation errors from req
     const errors = validationResult(req);
 
-    if (!errors.isEmpty) {
-      res.render("user/signup", {
+    if (!errors.isEmpty()) {
+      return res.render("user/signup", {
         title: "signup",
         data: req.body,
         errors: errors.array(),
       });
-      return;
     } else {
       const email = req.body.email;
       const password = req.body.password;

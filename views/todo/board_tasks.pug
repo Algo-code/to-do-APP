@@ -29,7 +29,7 @@ html(lang="en")
                         a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All (#{results.boards.myBoards.tasks.length})
                 each board in results.boards.myBoards 
                     li.side__board 
-                        a.board__nav(href="/my_board/"+board._id, class=(path === '/my_board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
+                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
             else 
                 li.side__board
                     a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All 
@@ -46,7 +46,7 @@ html(lang="en")
             if results.boards.sharedBoards.length > 0
                 each board in results.boards.sharedBoards 
                     li.side__board 
-                        a.board__nav(href="/shared_board/"+board._id, class=(path === '/shared_board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
+                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
              
             form.logout(action="/shared_board/create", method="GET") 
                 input(type="hidden", name="_csrf", value= csrfToken)
@@ -84,6 +84,11 @@ html(lang="en")
                 span.chev1(class="material-icons md64") arrow_back_ios 
                 h2 #{title}
                 span.chev2(class="material-icons md64") arrow_forward_ios
-                form.logout(action='/my_board/'+ currentBoard._id+'/task/create', method="GET") 
-                    input(type="hidden", name="_csrf", value= csrfToken)
-                    button(type="submit",class="btn btn__board") Add Board
+                if boardType == 'myBoard'
+                    form.logout(action='/my_board/'+ currentBoard._id+'/task/create', method="GET") 
+                        input(type="hidden", name="_csrf", value= csrfToken)
+                        button(type="submit",class="btn btn__board") Add Board
+                else if boardType == 'sharedBoard'
+                    form.logout(action='/shared_board/'+ currentBoard._id+'/task/create', method="GET") 
+                        input(type="hidden", name="_csrf", value= csrfToken)
+                        button(type="submit",class="btn btn__board") Add Shared Board

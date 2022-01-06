@@ -1,0 +1,89 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/stylesheets/main.css")
+    link(rel="stylesheet", href="/stylesheets/task_card.css")
+    link(rel="stylejs", href="/javascripts/main.js")
+    link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
+    link(href='https://css.gg/calendar.css' rel='stylesheet')
+    link(rel="stylesheet" href="/icons/font-awesome/css/font-awesome.css")
+    title #{title}
+
+    body
+        div(class="split left")
+            .left__title
+                h1.board__title My Boards
+            br
+            
+            block content
+            if results.boards.myBoards.length > 0
+                
+                if results.boards.myBoards.tasks == null || results.boards.myBoards.tasks.length < 1
+                    li.side__board
+                        a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All (0)
+                else
+                    li.side__board 
+                        a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All (#{results.boards.myBoards.tasks.length})
+                each board in results.boards.myBoards 
+                    li.side__board 
+                        a.board__nav(href="/my_board/"+board._id, class=(path === '/my_board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
+            else 
+                li.side__board
+                    a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All 
+
+            form.logout(action="/my_board/create", method="GET") 
+                input(type="hidden", name="_csrf", value= csrfToken)
+                button(type="submit",class="btn btn__board") Add Board
+
+
+            .left__title
+                h1.board__title Shared Boards
+            br
+
+            if results.boards.sharedBoards.length > 0
+                each board in results.boards.sharedBoards 
+                    li.side__board 
+                        a.board__nav(href="/shared_board/"+board._id, class=(path === '/shared_board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
+             
+            form.logout(action="/shared_board/create", method="GET") 
+                input(type="hidden", name="_csrf", value= csrfToken)
+                button(type="submit",class="btn btn__board") Add S Board
+            form.logout(action="/logout", method="POST") 
+                input(type="hidden", name="_csrf", value= csrfToken)
+                button(type="submit",class="btn btn__board") Sign out
+
+            
+        div(class="split right")
+            
+            section(class="cards")
+                if currentBoard.tasks != null && currentBoard.tasks.length > 0
+                    each task in currentBoard.tasks 
+                        article(class="card card--1")
+                            div(class="card__img")
+                                    
+                                div(class="card__info-hover")
+                                    svg(class="task__done" viewBox="0 0 24 24")
+                                    path(fill="#000000" d="")
+                                div(class="task__delete")
+                                    span.icon__btn(href="/task/delete", class="material-icons md24") delete
+                                    //- span.calen(class="material-icons md24") calendar_month
+                                h2.img__date #{task.day}
+                            a(href="#" class="card__link")                                   
+                                div(class="card__img--hover")
+                            div(class="card__info")
+                                span(class="card__title") #{task.title}
+                                h3(class="card__description") #{task.description}
+                                p(class="card__board") #{currentBoard.name}
+                                span(class="task__due") #{task.weekday}
+                else 
+                    h2 This board has no tasks!
+            section(class="top__items") 
+                span.chev1(class="material-icons md64") arrow_back_ios 
+                h2 #{title}
+                span.chev2(class="material-icons md64") arrow_forward_ios
+                form.logout(action='/my_board/'+ currentBoard._id+'/task/create', method="GET") 
+                    input(type="hidden", name="_csrf", value= csrfToken)
+                    button(type="submit",class="btn btn__board") Add Board

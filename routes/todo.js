@@ -18,7 +18,7 @@ router.post('/my_board/create', isAuth, todo_controller.create_myBoard_post);
 router.get('/shared_board/create', isAuth, todo_controller.create_sharedBoard_get);
 router.post('/shared_board/create', isAuth, todo_controller.create_sharedBoard_post);
 
-router.get('/my_board/:boardID', isAuth, todo_controller.get_task_board)
+router.get('/board/:boardID', isAuth, todo_controller.get_task_board)
 //router.get('/my_board/:boardID', isAuth, todo_controller)
 
 router.get('/my_board/:boardID/task/create', isAuth, todo_controller.create_myTask_get);
