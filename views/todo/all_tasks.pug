@@ -33,16 +33,22 @@ html(lang="en")
             else 
                 li.side__board
                     a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All 
+            form.logout(action="/my_board/create", method="GET") 
+                input(type="hidden", name="_csrf", value= csrfToken)
+                button(type="submit",class="btn btn__board") Add Board
 
-            if results.boards.sharedBoards.length > 0
+            .left__title
                 h1.board__title Shared Boards
+            br
+            
+            if results.boards.sharedBoards.length > 0
                 each board in results.boards.sharedBoards 
                     li.side__board 
                         a.board__nav(href="/shared_board/"+board._id, class=(path === '/shared_board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
              
-            form.logout(action="/my_board/create", method="GET") 
+            form.logout(action="/shared_board/create", method="GET") 
                 input(type="hidden", name="_csrf", value= csrfToken)
-                button(type="submit",class="btn btn__board") Add Board
+                button(type="submit",class="btn btn__board") Add Shared B
             form.logout(action="/logout", method="POST") 
                 input(type="hidden", name="_csrf", value= csrfToken)
                 button(type="submit",class="btn btn__board") Sign out

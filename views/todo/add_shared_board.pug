@@ -22,10 +22,11 @@ html(lang="en")
                 span Board
                 datalist(id="boards")
                     option(value="random")
-                    option(value="work")
-                    option(value="school")
-                    option(value="personal")
-                    option(value="home")
+                    option(value="general")
+            label(for="collaborators")
+                input(list="users", type="text", placeholder="Add users you want to work with", name="collaborators")#collaborators
+                span Collaborators
+                datalist(id="users")
             input(type="hidden", name="_csrf", value= csrfToken)
             .btn__task
                 a(href="/")

@@ -104,6 +104,16 @@ exports.create_sharedTask_post = [
     .trim()
     .isLength({ max: 150 })
     .escape(),
+    body("priority", "set task importance by adding priority")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isNumeric()
+    .escape(),
+    body("assigned_to", "add user to whom the task is assigned")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isEmail()
+    .escape(),
   body("due_date", "Invalid date").isISO8601().toDate(),
 
   //process request after validation and sanitization
@@ -113,7 +123,8 @@ exports.create_sharedTask_post = [
 
     if (!errors.isEmpty) {
       res.render("todo/add_shared_task", {
-        title: "add task",
+        board_id: boardID,
+        title: "add shared task",
         task: req.body,
         errors: errors.array(),
       });
@@ -122,6 +133,13 @@ exports.create_sharedTask_post = [
       //console.log(req.body.board);
         SharedBoard.findById(req.params.boardID, function (err, board) {
           if (err) return next(err);
+          function assignTask (array){
+            if(array !== null && !array.isEmpty()){
+              return array;
+            }else{
+              return new Array();
+            }
+          }
           const task = {
             _id: mongoose.Types.ObjectId(),
             title: req.body.title,
@@ -131,7 +149,7 @@ exports.create_sharedTask_post = [
             timeStamp: date,
             priority: req.body.priority,
             createdBy: req.user._id,
-            assignedTo: new Array(),
+            assignedTo: assignTask(req.body.assign_to),
             day: getDay(req.body.due_date),
             weekday: getWeek(req.body.due_date),
           };
@@ -147,7 +165,6 @@ exports.create_sharedTask_post = [
 
 //Display create myTask
 exports.create_myTask_get = (req, res, next) => {
-  console.log("get task: " + req.params._id + " " + req.params.board);
   res.render("todo/add_task", {
     title: "new task",
     date: currentDate,
@@ -158,7 +175,6 @@ exports.create_myTask_get = (req, res, next) => {
 
 //Display create sharedTask
 exports.create_sharedTask_get = (req, res, next) => {
-    console.log("get task: " + req.params._id + " " + req.params.board);
     res.render("todo/add_shared_task", {
       title: "new task",
       date: currentDate,
@@ -273,7 +289,6 @@ exports.get_tasks = (req, res, next) => {
     },
     function (err, results) {
       if (err) return next(err);
-      console.log(results.boards.myBoards);
       res.render("todo/all_tasks", {
         title: "All Tasks",
         results: results,
@@ -297,21 +312,20 @@ exports.get_task_board = (req, res, next) => {
           })
           .exec(callback);
       },
-      currentBoard: function (callback) {
-        MyBoard.findById(req.params.boardID)
-        .exec(callback)
-      },
     },
     function (err, results) {
       if (err) return next(err);
-      if (results.myBoards === null || results.sharedBoards === null) {
+      currentBoard = results.boards.myBoards.find(board => board._id == req.params.boardID);
+      if (!currentBoard) {
         var err = new Error("Board Not Found");
         err.status = 404;
         return next(err);
       }
+      
       res.render("todo/board_tasks", {
-        title: results.currentBoard.name + ' Tasks',
+        title: currentBoard.name + ' Tasks',
         results: results,
+        currentBoard: currentBoard,
         path: "/my_board/" /*+results.board_tasks._id*/,
       });
     }
