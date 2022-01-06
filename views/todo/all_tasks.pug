@@ -19,24 +19,30 @@ html(lang="en")
             br
             
             block content
-            if results.myBoards.length > 0
-                li.side__board
-                    a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All (#{results.myBoards.tasks.length + results.sharedBoards.tasks.length})
-                each board in results.myBoards 
+            if results.boards.myBoards.length > 0
+                
+                if results.boards.myBoards.tasks == null || results.boards.myBoards.tasks.length < 1
+                    li.side__board
+                        a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All (0)
+                else
                     li.side__board 
-                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
+                        a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All (#{results.boards.myBoards.tasks.length})
+                each board in results.boards.myBoards 
+                    li.side__board 
+                        a.board__nav(href="/my_board/"+board._id, class=(path === '/my_board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
             else 
                 li.side__board
                     a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All 
 
-            if results.sharedBoards.length > 0
+            if results.boards.sharedBoards.length > 0
                 h1.board__title Shared Boards
-                each board in results.sharedBoards 
+                each board in results.boards.sharedBoards 
                     li.side__board 
-                        a.board__nav(href="/board/"+board._id, class=(path === '/board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
+                        a.board__nav(href="/shared_board/"+board._id, class=(path === '/shared_board/'+board._id ? 'active' : '')) #{board.name} (#{board.task_count})
              
-            button(class="btn btn__board")
-                a.to__tc(href="board/create") Add Board
+            form.logout(action="/my_board/create", method="GET") 
+                input(type="hidden", name="_csrf", value= csrfToken)
+                button(type="submit",class="btn btn__board") Add Board
             form.logout(action="/logout", method="POST") 
                 input(type="hidden", name="_csrf", value= csrfToken)
                 button(type="submit",class="btn btn__board") Sign out
@@ -46,8 +52,8 @@ html(lang="en")
         div(class="split right")           
             
             section(class="cards")
-                if results.myBoards.length > 0
-                    each board in results.myBoards 
+                if results.boards.myBoards.length > 0
+                    each board in results.boards.myBoards 
                         each task in board.tasks
                             article(class="card card--1")
                                 div(class="card__img")

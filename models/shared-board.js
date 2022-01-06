@@ -10,6 +10,10 @@ var SharedBoardSchema = new Schema({
         minlength: 3,
         maxLength:30
     },
+    createdOn: {
+        type: Date,
+        default: Date.now()
+    },
     tasks: [{
         title: {
             type: String,
