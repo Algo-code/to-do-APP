@@ -68,7 +68,7 @@ var SharedBoardSchema = new Schema({
 });
 
 SharedBoardSchema.virtual('url').get(function(){
-    return '/shared_board/' + this._id;
+    return '/board/' + this._id;
 });
 
 SharedBoardSchema.virtual('task_count').get(function(){

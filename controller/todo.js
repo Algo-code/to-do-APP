@@ -132,12 +132,18 @@ exports.create_sharedTask_post = [
     } else {
       //console.log(req.body.board);
         SharedBoard.findById(req.params.boardID, function (err, board) {
+          console.log(req.body);
           if (err) return next(err);
+
           function assignTask (array){
-            if(array !== null && !array.isEmpty()){
-              return array;
+            if(Array.isArray(array)){
+              if(array !== null && !array.isEmpty()){
+                return array;
+              }else{
+                return new Array();
+              }
             }else{
-              return new Array();
+              return new Array(array);
             }
           }
           const task = {
@@ -149,9 +155,9 @@ exports.create_sharedTask_post = [
             timeStamp: date,
             priority: req.body.priority,
             createdBy: req.user._id,
-            assignedTo: assignTask(req.body.assign_to),
+            assignedTo: assignTask(req.body.assigned_to),
             day: getDay(req.body.due_date),
-            weekday: getWeek(req.body.due_date),
+            weekday: getWeekday(req.body.due_date),
           };
           board.tasks.push(task);
           board.save(function (err) {
@@ -369,28 +375,54 @@ exports.get_task_board = (req, res, next) => {
 // };
 
 
+//Delete Personal Task Post Controller
 
-
-//Display single Task
-exports.get_task = (req, res, next) => {
-  async.parallel(
-    {
-      task: function (callback) {
-        Task.findById(req.param.id).exec(callback);
-      },
-    },
-    function (err, results) {
-      if (err) return next(err);
-      if (results.task == null) {
-        var err = new Error("Task Not Found");
-        err.status = 404;
-        return next(err);
-      }
-
-      res.render("task_details", {
-        title: results.task.title,
-        task: results.task,
-      });
+exports.deleteTask = (req, res, next) => {
+  var board_id = mongoose.Types.ObjectId(req.params.boardID);
+  var task_id = mongoose.Types.ObjectId(req.params._id);
+  
+  User.findById(req.user._id, (err, result) => {
+    if(err)
+      return next(err);
+    if(result.myBoards.includes(board_id)){
+      MyBoard.findOneAndUpdate( { _id: board_id }, 
+        { $pull: { tasks: {_id: task_id} } }, 
+        {safe: true, multi:false} )
+      .then(res.redirect('/board/'+req.params.boardID))
+      .catch(err => console.log(err));
+      
     }
-  );
-};
+    else{
+      var err = new Error("Board Not Found");
+      err.status = 404;
+      return next(err);
+    }
+  })
+}
+
+//Delete Shared Task Controller
+exports.deleteSharedTask = (req, res, next) => {
+  board_id = mongoose.Types.ObjectId(req.params.boardID);
+  SharedBoard.findById(board_id, (err, result) => {
+    if(err)
+      return next(err);
+    if(result.owner == mongoose.Types.ObjectId(req.user._id)){
+      SharedBoard.findOneAndUpdate({_id: board_id}, 
+        {$pull: {tasks: {_id: task_id}}}, 
+        {safe:true, multi:false})
+      .then(res.redirect('/board/'+req.params.boardID))
+      .catch(err => console.log(err));
+    }
+    else{
+      return;
+    }
+  })
+}
+
+exports.edit_myTask_get = (req, res, next) => {
+
+}
+
+exports.edit_myTask_post = (req, res, next) => {
+
+}

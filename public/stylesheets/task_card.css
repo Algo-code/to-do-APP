@@ -123,16 +123,19 @@ h2{
     top: 150px;
 }  
 
-.task__done {
-    width: 18px;
+.task__edit {
+    display: none;
+    width: 24px;
+}
+
+.task__edit:hover{
+    fill:blue;
+    transform: scale(1.10, 1.10);
 }
 
 .task__delete {
     display: none;
     width: 24px;
-
-  vertical-align: middle;
-    fill: #AD7D52;
 }
 .task__delete:hover{
     fill: red;
@@ -340,24 +343,52 @@ top: 0;
     opacity: 0;
 }
 
-
-.card:hover .task__done {
-    display: inline-block;
+.task__icons{
+    display: none;
 }
 
-.card:hover .task__delete{
+.task__edit {
     display: inline-block;
     width: 24px;
     height: 24px;
-    margin-top: 0;
+    margin-top: 2;
     margin-left: 10px;
     cursor: pointer;
+    text-align: left;
+}
+
+.task__delete{
+    cursor: pointer;
+    display:inline;
+    width: 24px;
+    height: 24px;
+    right: 0;
     text-align: center;
 }
 
-.card:hover .task__delete:hover{
-    fill: red;
+.icon__btn{
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
+    border: none;
+}
+
+.task__delete:hover{
+    color: red !important;
     
+}
+
+.task__edit:hover{
+    color: rgba(0, 0, 255, 0.568) !important;
+    
+}
+
+.card:hover .task__icons{
+    display: flex;
+    gap: 60%;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;    
 }
 
 .card:hover .calen{

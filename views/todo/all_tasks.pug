@@ -64,12 +64,15 @@ html(lang="en")
                             article(class="card card--1")
                                 div(class="card__img")
                                                     
-                                    div(class="card__info-hover")
-                                        svg(class="task__done" viewBox="0 0 24 24")
-                                        path(fill="#000000" d="")
-                                    div(href="/task/delete",class="task__delete")
-                                        span.icon__btn( class="material-icons md24") delete
-                                            //- span.calen(class="material-icons md24") calendar_month
+                                    div(class="task__icons")
+                                        form(action= "/board/"+board._id+"/"+task._id+"/edit", method="GET")
+                                            button.icon__btn(type="submit")
+                                                span.task__edit(class="material-icons md24") edit
+                                        form(action = "/board/"+board._id+"/"+task._id+"/delete", method="POST")
+                                            input(type="hidden", name="_csrf", value= csrfToken)
+                                            button.icon__btn(type="submit")
+                                                span.task__delete(class="material-icons md24") delete
+                                
                                     h2.img__date #{task.day}
                                 a(href="#" class="card__link")                                   
                                     div(class="card__img--hover")
