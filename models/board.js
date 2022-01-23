@@ -3,6 +3,57 @@ const {DateTime} = require('luxon')
 
 const Schema = mongoose.Schema;
 
+var TaskSchema = new Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    description:{
+        type: String,
+    },
+    dueDate:{
+        type: Date,
+        default: Date.now(),
+        required: true,
+    },
+    status:{
+        type: String,
+        default: "new"
+    },
+    timeStamp:{
+        type: Date,
+        default: Date.now()
+    },
+    day: {
+        type: String,
+    },
+});
+
+TaskSchema.virtual('weekday').get(function() {
+    var due_date = DateTime.fromJSDate(this.dueDate).toLocaleString(DateTime.DATE_SHORT);
+    const today = Date.now();
+    const diffTime = this.dueDate - today;
+    const diffDays = Math.ceil(diffTime/(1000 * 60 * 60 * 24));
+  
+    if(diffDays > 5 || diffDays < -1){
+        return due_date
+    }
+    else if(diffDays == 0){
+        return 'Today';
+    }
+    else if(diffDays == 1){
+        return 'Tomorrow';
+    }
+    else if(diffDays == -1){
+        return 'Yesterday';
+    }
+    else{
+        const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        return weekday[this.dueDate.getDay()];
+    }
+  });
+
+
 var BoardSchema = new Schema({
     name: {
         type: String,
@@ -14,38 +65,11 @@ var BoardSchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    tasks: [{
-        title: {
-            type: String,
-            required: true
-        },
-        description:{
-            type: String,
-        },
-        dueDate:{
-            type: Date,
-            default: Date.now(),
-            required: true,
-        },
-        status:{
-            type: String,
-            default: "new"
-        },
-        timeStamp:{
-            type: Date,
-            default: Date.now()
-        },
-        day: {
-            type: String,
-        },
-        weekday: {
-            type: String,
-        }
-    }],
+    tasks: [TaskSchema]
 });
 
 BoardSchema.virtual('url').get(function(){
-    return '/my_board/' + this._id;
+    return '/board/' + this._id;
 });
 
 BoardSchema.virtual('task_count').get(function(){

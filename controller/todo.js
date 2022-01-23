@@ -14,31 +14,37 @@ const currentDate = DateTime.fromJSDate(date).toLocaleString(
   DateTime.DATE_SHORT
 );
 
-function getDay (dueDate) {
+function getDay(dueDate) {
   return dueDate.getDate();
-};
+}
 
-function getWeekday (dueDate) {
-  var due_date = DateTime.fromJSDate(dueDate).toLocaleString(DateTime.DATE_SHORT);
+function getWeekday(dueDate) {
+  var due_date = DateTime.fromJSDate(dueDate).toLocaleString(
+    DateTime.DATE_SHORT
+  );
   const today = Date.now();
   const diffTime = dueDate - today;
-  const diffDays = Math.ceil(diffTime/(1000 * 60 * 60 * 24));
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  if(diffDays > 5 || diffDays < -1){
-      return due_date
-  }
-  else if(diffDays == 0){
-      return 'Today';
-  }
-  else if(diffDays == 1){
-      return 'Tomorrow';
-  }
-  else if(diffDays == -1){
-      return 'Yesterday';
-  }
-  else{
-      const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-      return weekday[dueDate.getDay()];
+  if (diffDays > 5 || diffDays < -1) {
+    return due_date;
+  } else if (diffDays == 0) {
+    return "Today";
+  } else if (diffDays == 1) {
+    return "Tomorrow";
+  } else if (diffDays == -1) {
+    return "Yesterday";
+  } else {
+    const weekday = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    return weekday[dueDate.getDay()];
   }
 }
 
@@ -69,26 +75,34 @@ exports.create_myTask_post = [
       });
       return;
     } else {
-      //console.log(req.body.board);
-        MyBoard.findById(req.params.boardID, function (err, board) {
-          if (err) return next(err);
-          const task = {
-            _id: mongoose.Types.ObjectId(),
-            title: req.body.title,
-            description: req.body.description,
-            dueDate: req.body.due_date,
-            status: "new",
-            timeStamp: date,
-            day: getDay(req.body.due_date),
-            weekday: getWeekday(req.body.due_date),
-          };
-          board.tasks.push(task);
-          board.save(function (err) {
+      var board_id = mongoose.Types.ObjectId(req.params.boardID);
+
+      User.findById(req.user._id, (err, result) => {
+        if (err) return next(err);
+        if (result.myBoards.includes(board_id)) {
+          MyBoard.findById(req.params.boardID, function (err, board) {
             if (err) return next(err);
-            res.redirect(board.url);
+            const task = {
+              _id: mongoose.Types.ObjectId(),
+              title: req.body.title,
+              description: req.body.description,
+              dueDate: req.body.due_date,
+              status: "new",
+              timeStamp: date,
+              day: getDay(req.body.due_date),
+            };
+            board.tasks.push(task);
+            board.save(function (err) {
+              if (err) return next(err);
+              res.redirect(board.url);
+            });
           });
-        });
-        //res.redirect('/');
+        } else {
+          var err = new Error("Board Not Found");
+          err.status = 404;
+          return next(err);
+        }
+      });
     }
   },
 ];
@@ -104,12 +118,12 @@ exports.create_sharedTask_post = [
     .trim()
     .isLength({ max: 150 })
     .escape(),
-    body("priority", "set task importance by adding priority")
+  body("priority", "set task importance by adding priority")
     .optional({ checkFalsy: true })
     .trim()
     .isNumeric()
     .escape(),
-    body("assigned_to", "add user to whom the task is assigned")
+  body("assigned_to", "add user to whom the task is assigned")
     .optional({ checkFalsy: true })
     .trim()
     .isEmail()
@@ -130,41 +144,50 @@ exports.create_sharedTask_post = [
       });
       return;
     } else {
-      //console.log(req.body.board);
-        SharedBoard.findById(req.params.boardID, function (err, board) {
-          console.log(req.body);
-          if (err) return next(err);
+      var board_id = mongoose.Types.ObjectId(req.params.boardID);
 
-          function assignTask (array){
-            if(Array.isArray(array)){
-              if(array !== null && !array.isEmpty()){
-                return array;
-              }else{
-                return new Array();
-              }
-            }else{
-              return new Array(array);
-            }
-          }
-          const task = {
-            _id: mongoose.Types.ObjectId(),
-            title: req.body.title,
-            description: req.body.description,
-            dueDate: req.body.due_date,
-            status: "new",
-            timeStamp: date,
-            priority: req.body.priority,
-            createdBy: req.user._id,
-            assignedTo: assignTask(req.body.assigned_to),
-            day: getDay(req.body.due_date),
-            weekday: getWeekday(req.body.due_date),
-          };
-          board.tasks.push(task);
-          board.save(function (err) {
+      User.findById(req.user._id, (err, result) => {
+        if (err) return next(err);
+        if (result.sharedBoards.includes(board_id)) {
+          SharedBoard.findById(req.params.boardID, function (err, board) {
             if (err) return next(err);
-            res.redirect(board.url);
+
+            function assignTask(array) {
+              if (Array.isArray(array)) {
+                if (array !== null && !array.isEmpty()) {
+                  return array;
+                } else {
+                  return new Array();
+                }
+              } else {
+                return new Array(array);
+              }
+            }
+            const task = {
+              _id: mongoose.Types.ObjectId(),
+              title: req.body.title,
+              description: req.body.description,
+              dueDate: req.body.due_date,
+              status: "new",
+              timeStamp: date,
+              priority: req.body.priority,
+              createdBy: req.user._id,
+              assignedTo: assignTask(req.body.assigned_to),
+              day: getDay(req.body.due_date),
+              //weekday: getWeekday(req.body.due_date),
+            };
+            board.tasks.push(task);
+            board.save(function (err) {
+              if (err) return next(err);
+              res.redirect(board.url);
+            });
           });
-        });
+        } else {
+          var err = new Error("Board Not Found");
+          err.status = 404;
+          return next(err);
+        }
+      });
     }
   },
 ];
@@ -178,16 +201,14 @@ exports.create_myTask_get = (req, res, next) => {
   });
 };
 
-
 //Display create sharedTask
 exports.create_sharedTask_get = (req, res, next) => {
-    res.render("todo/add_shared_task", {
-      title: "new task",
-      date: currentDate,
-      board_id: req.params.boardID,
-    });
-  };
-
+  res.render("todo/add_shared_task", {
+    title: "new task",
+    date: currentDate,
+    board_id: req.params.boardID,
+  });
+};
 
 //display create myBoard
 exports.create_myBoard_get = (req, res, next) => {
@@ -196,7 +217,7 @@ exports.create_myBoard_get = (req, res, next) => {
 
 //display create sharedBoard
 exports.create_sharedBoard_get = (req, res, next) => {
-    res.render("todo/add_shared_board", { title: "Add Board" });
+  res.render("todo/add_shared_board", { title: "Add Board" });
 };
 
 // Create myBoard Post controller
@@ -295,7 +316,20 @@ exports.get_tasks = (req, res, next) => {
     },
     function (err, results) {
       if (err) return next(err);
+      var mtotal = 0;
+      var stotal = 0;
+      function totalTasks() {
+        for (var i = 0; i < results.boards.myBoards.length; i++) {
+          mtotal += results.boards.myBoards[i].tasks.length;
+        }
+        for (var i = 0; i < results.boards.sharedBoards.length; i++) {
+          stotal += results.boards.sharedBoards[i].tasks.length;
+        }
+        //console.log(total);
+        return mtotal + stotal;
+      }
       res.render("todo/all_tasks", {
+        totalTasks: totalTasks(),
         title: "All Tasks",
         results: results,
         currentDate: currentDate,
@@ -321,30 +355,45 @@ exports.get_task_board = (req, res, next) => {
     },
     function (err, results) {
       if (err) return next(err);
-      currentBoard = results.boards.myBoards.find(board => board._id == req.params.boardID);
-      var boardType = 'myBoard';
-      if(!currentBoard){
-        currentBoard = results.boards.sharedBoards.find(board => board._id == req.params.boardID);
-        var boardType = 'sharedBoard';
+      currentBoard = results.boards.myBoards.find(
+        (board) => board._id == req.params.boardID
+      );
+      var boardType = "myBoard";
+      if (!currentBoard) {
+        currentBoard = results.boards.sharedBoards.find(
+          (board) => board._id == req.params.boardID
+        );
+        var boardType = "sharedBoard";
       }
       if (!currentBoard) {
         var err = new Error("Board Not Found");
         err.status = 404;
         return next(err);
       }
-      
+      // count all tasks in all boards
+      var mtotal = 0;
+      var stotal = 0;
+      function totalTasks() {
+        for (var i = 0; i < results.boards.myBoards.length; i++) {
+          mtotal += results.boards.myBoards[i].tasks.length;
+        }
+        for (var i = 0; i < results.boards.sharedBoards.length; i++) {
+          stotal += results.boards.sharedBoards[i].tasks.length;
+        }
+        //console.log(total);
+        return mtotal + stotal;
+      }
       res.render("todo/board_tasks", {
-        title: currentBoard.name + ' Tasks',
+        title: currentBoard.name + " Tasks",
         boardType: boardType,
         results: results,
+        totalTasks: totalTasks(),
         currentBoard: currentBoard,
         path: "/my_board/" /*+results.board_tasks._id*/,
       });
     }
   );
 };
-
-
 
 // //Display Task by shared_Board category
 // exports.get_task_board = (req, res, next) => {
@@ -374,55 +423,50 @@ exports.get_task_board = (req, res, next) => {
 //   );
 // };
 
-
 //Delete Personal Task Post Controller
 
 exports.deleteTask = (req, res, next) => {
   var board_id = mongoose.Types.ObjectId(req.params.boardID);
   var task_id = mongoose.Types.ObjectId(req.params._id);
-  
-  User.findById(req.user._id, (err, result) => {
-    if(err)
-      return next(err);
-    if(result.myBoards.includes(board_id)){
-      MyBoard.findOneAndUpdate( { _id: board_id }, 
-        { $pull: { tasks: {_id: task_id} } }, 
-        {safe: true, multi:false} )
-      .then(res.redirect('/board/'+req.params.boardID))
-      .catch(err => console.log(err));
-      
-    }
-    else{
+  var user_id = req.user._id;
+
+  User.findById(user_id, (err, result) => {
+    if (err) return next(err);
+    if (result.myBoards.includes(board_id)) {
+      MyBoard.findOneAndUpdate(
+        { _id: board_id },
+        { $pull: { tasks: { _id: task_id } } },
+        { safe: true, multi: false }
+      )
+        .then(res.redirect("/board/" + req.params.boardID))
+        .catch((err) => console.log(err));
+    } else if (result.sharedBoards.includes(board_id)) {
+      SharedBoard.findById(board_id, (err, board) => {
+        if (err) return next(err);
+        if (String(board.owner) === String(mongoose.Types.ObjectId(user_id))) {
+          SharedBoard.findOneAndUpdate(
+            { _id: board_id },
+            { $pull: { tasks: { _id: task_id } } },
+            { safe: true, multi: false }
+          )
+            .then(res.redirect("/board/" + req.params.boardID))
+            .catch((err) => console.log(err));
+        } else {
+          var err = new Error("Not Owner Of Board");
+          err.status = 403;
+          return next(err);
+        }
+      });
+    } else {
       var err = new Error("Board Not Found");
       err.status = 404;
       return next(err);
     }
-  })
-}
-
-//Delete Shared Task Controller
-exports.deleteSharedTask = (req, res, next) => {
-  board_id = mongoose.Types.ObjectId(req.params.boardID);
-  SharedBoard.findById(board_id, (err, result) => {
-    if(err)
-      return next(err);
-    if(result.owner == mongoose.Types.ObjectId(req.user._id)){
-      SharedBoard.findOneAndUpdate({_id: board_id}, 
-        {$pull: {tasks: {_id: task_id}}}, 
-        {safe:true, multi:false})
-      .then(res.redirect('/board/'+req.params.boardID))
-      .catch(err => console.log(err));
-    }
-    else{
-      return;
-    }
-  })
-}
+  });
+};
 
 exports.edit_myTask_get = (req, res, next) => {
+  res.render("todo/add_task", { data: req.body });
+};
 
-}
-
-exports.edit_myTask_post = (req, res, next) => {
-
-}
+exports.edit_myTask_post = (req, res, next) => {};

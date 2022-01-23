@@ -21,7 +21,6 @@ router.post('/shared_board/create', isAuth, todo_controller.create_sharedBoard_p
 router.get('/board/:boardID', isAuth, todo_controller.get_task_board)
 
 router.post('/board/:boardID/:_id/delete', isAuth, todo_controller.deleteTask);
-router.post('/sboard/:boardID/:_id/delete', isAuth, todo_controller.deleteSharedTask)
 
 router.get('/task/:boardID/:_id/edit', isAuth, todo_controller.edit_myTask_get);
 router.post('/task/:boardID/:_id/edit', isAuth, todo_controller.edit_myTask_post);
