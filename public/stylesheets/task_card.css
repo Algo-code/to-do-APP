@@ -199,6 +199,13 @@ h2{
     margin-right: 10px;
 }
 
+.btn__add__task{
+    background-color:rgb(90, 0, 90);
+    width: 100%;
+    left:0;
+    margin-right: 10px;
+}
+
 .btn__board:hover{
     background-color: rgb(63, 0, 63);
 }

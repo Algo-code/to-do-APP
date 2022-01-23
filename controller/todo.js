@@ -466,6 +466,10 @@ exports.deleteTask = (req, res, next) => {
 };
 
 exports.edit_myTask_get = (req, res, next) => {
+  var board_id = mongoose.Types.ObjectId(req.params.boardID);
+  var task_id = mongoose.Types.ObjectId(req.params._id);
+  var user_id = req.user._id;
+
   res.render("todo/add_task", { data: req.body });
 };
 

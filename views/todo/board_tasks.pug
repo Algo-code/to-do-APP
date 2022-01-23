@@ -125,8 +125,8 @@ html(lang="en")
                 if boardType == 'myBoard'
                     form.logout(action='/my_board/'+ currentBoard._id+'/task/create', method="GET") 
                         input(type="hidden", name="_csrf", value= csrfToken)
-                        button(type="submit",class="btn btn__board") Add Task
+                        button(type="submit",class="btn btn__add__task") Add Task
                 else if boardType == 'sharedBoard'
                     form.logout(action='/shared_board/'+ currentBoard._id+'/task/create', method="GET") 
                         input(type="hidden", name="_csrf", value= csrfToken)
-                        button(type="submit",class="btn btn__board") Add Task
+                        button(type="submit",class="btn btn__add__task") Add Task
