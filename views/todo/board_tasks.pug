@@ -17,8 +17,7 @@ html(lang="en")
             .left__title
                 h1.board__title My Boards
             br
-            
-            block content
+
             if totalTasks > 0
                 li.side__board
                     a.board__nav(href="/", class=(path === '/' ? 'active' : '')) All (#{totalTasks})
@@ -68,11 +67,21 @@ html(lang="en")
             section(class="cards")
                 if boardType == 'myBoard'    
                     if currentBoard.tasks != null && currentBoard.tasks.length > 0
-                        each task in currentBoard.tasks 
-                            article(class="card card--1")
+                        each task in currentBoard.tasks
+                            if task.status == "complete"
+                                - var card = 'card__done'
+                                - var card__info = 'card__info__done'
+                            else 
+                                - var card = 'card'
+                                - var card__info = 'card__info' 
+                            article(class= card + " card--1")
                                 div(class="card__img")
                                         
                                     div(class="task__icons")
+                                        form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                            input(type="hidden", name="_csrf", value= csrfToken)
+                                            button.icon__btn(type="submit")
+                                                span.task__done(class="material-icons md24") task
                                         form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
                                             button.icon__btn(type="submit")
                                                 span.task__edit(class="material-icons md24") edit
@@ -84,7 +93,7 @@ html(lang="en")
                                     h2.img__date #{task.day}
                                 a(href="#" class="card__link")                                   
                                     div(class="card__img--hover")
-                                div(class="card__info")
+                                div(class= card__info)
                                     span(class="card__title") #{task.title}
                                     h3(class="card__description") #{task.description}
                                     p(class="card__board") #{currentBoard.name}
@@ -94,14 +103,26 @@ html(lang="en")
 
                 if boardType == 'sharedBoard'    
                     if currentBoard.tasks != null && currentBoard.tasks.length > 0
-                        each task in currentBoard.tasks 
-                            article(class="card card--1")
+                        each task in currentBoard.tasks
+                            if task.status == "complete"
+                                - var card = 'card__done'
+                                - var card__info = 'shared__card__info__done'
+                            else 
+                                - var card = 'card'
+                                - var card__info = 'shared__card__info' 
+                            article(class= card + " card--1")
                                 div(class="card__img")
                                         
                                     div(class="task__icons")
+                                        form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                            input(type="hidden", name="_csrf", value= csrfToken)
+                                            button.icon__btn(type="submit")
+                                                span.task__done(class="material-icons md24") task
+
                                         form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
                                             button.icon__btn(type="submit")
                                                 span.task__edit(class="material-icons md24") edit
+
                                         form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
                                             input(type="hidden", name="_csrf", value= csrfToken)
                                             button.icon__btn(type="submit")
@@ -110,7 +131,7 @@ html(lang="en")
                                     h2.img__date #{task.day}
                                 a(href="#" class="card__link")                                   
                                     div(class="card__img--hover")
-                                div(class="shared__card__info")
+                                div(class = card__info)
                                     span(class="card__title") #{task.title}
                                     h3(class="card__description") #{task.description}
                                     p(class="card__board") #{currentBoard.name}

@@ -469,8 +469,40 @@ exports.edit_myTask_get = (req, res, next) => {
   var board_id = mongoose.Types.ObjectId(req.params.boardID);
   var task_id = mongoose.Types.ObjectId(req.params._id);
   var user_id = req.user._id;
-
   res.render("todo/add_task", { data: req.body });
 };
 
 exports.edit_myTask_post = (req, res, next) => {};
+
+
+//POST controller to change task status
+exports.task_status = (req, res, next) => {
+  var board_id = mongoose.Types.ObjectId(req.params.boardID);
+  var task_id = mongoose.Types.ObjectId(req.params._id);
+  var user_id = req.user._id;
+
+  User.findById(user_id, (err, result) => {
+    if(err)
+      return next(err);
+    if(result.myBoards.includes(board_id)){
+      MyBoard.updateOne({_id: board_id, "tasks._id": task_id}, {$set: {"tasks.$.status": "complete"}}, 
+      function(err){
+        if(err)
+          return next(err);
+        return res.redirect(req.get('referer'));
+      });
+    } else if(result.sharedBoards.includes(board_id)){
+      SharedBoard.updateOne({_id: board_id, "tasks._id":task_id}, {$set: {"tasks.$.status": "complete"}},
+      function(err){
+        if(err)
+          return next(err);
+        return res.redirect(req.get('referer'));
+      });
+    }
+    else{
+      var err = new Error("Unauthorized Action");
+      err.status = 403;
+      return next(err);
+    }
+  }) 
+}

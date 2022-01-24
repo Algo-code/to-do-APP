@@ -130,6 +130,16 @@ h2{
     transform: scale(1.10, 1.10);
 }
 
+.task__done {
+    display: none;
+    width: 24px;
+}
+
+.task__done:hover{
+    fill:rgb(90, 0, 90);
+    transform: scale(1.10, 1.10);
+}
+
 .task__delete {
     display: none;
     width: 24px;
@@ -217,7 +227,7 @@ h2{
     font-size: 36px;
 }
 
-.card__info--hover {
+.card__info--hover, .card__info__done--hover {
     transition: all .4s cubic-bezier(0.175, 0.885, 0, 1);
     background-color: rgb(0, 26, 37);
     position: absolute;
@@ -227,7 +237,11 @@ h2{
   top: 0;
 }
 
-.shared__card__info--hover {
+.card__info__done--hover{
+    background-color: green !important;
+}
+
+.shared__card__info--hover, .shared__card__info__done--hover {
     transition: all .4s cubic-bezier(0.175, 0.885, 0, 1);
     background-color: rgb(90, 0, 90);
     position: absolute;
@@ -235,6 +249,10 @@ h2{
   width: 100%;
   opacity: 0;
   top: 0;
+}
+
+.shared__card__info--hover{
+    background-color: rgb(0, 90, 0);
 }
 
 .card__img--hover {
@@ -249,7 +267,7 @@ border-top-right-radius: 12px;
 top: 0;
   
 }
- .card {
+ .card, .card__done {
   margin-right: 10px;
   margin-left: 10px;
   margin-bottom: 25px;
@@ -262,14 +280,18 @@ top: 0;
   width: 200px;
   height:fit-content;
   min-width: 200px;
-} 
+}
 
-.card:hover {
+.card__done{
+    opacity: 50%;
+}
+
+.card:hover, .card__done:hover {
   box-shadow: 0px 30px 18px -8px rgba(0, 0, 0,0.1);
     transform: scale(1.05, 1.05);
 }
 
-.shared__card__info {
+.shared__card__info, .shared__card__info__done {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -282,7 +304,15 @@ top: 0;
     padding: 16px 24px 24px 24px;
 }
 
-.card__info {
+.shared__card__info__done{
+    background-color: rgb(0, 90, 0) !important;
+}
+
+.shared__card__info--hover{
+    background-color: rgb(0, 90, 0) !important;
+}
+
+.card__info, .card__info__done {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -293,6 +323,10 @@ top: 0;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
     padding: 16px 24px 24px 24px;
+}
+
+.card__info__done{
+    background-color: green !important;
 }
 
 .card__description {
@@ -334,41 +368,60 @@ top: 0;
     display: none;
 }
 
-.card:hover .card__img--hover {
+.card:hover .card__img--hover, .card__done:hover .card__img--hover {
     height: 36px;
     opacity: 0.3;
     opacity: 50%;
     display: none;
 }
-.card:hover .card__img{
+.card:hover .card__img, .card__done:hover .card__img{
     height: 36px;
 }
 
 .card:hover .card__info {
     height:fit-content;
     max-height: 250px;
+    min-height: 180px;
     background-color: rgb(0, 26, 37);;
     position: relative;
-}  
+} 
 
-.card:hover .shared__card__info {
+.card__done:hover .card__info__done{
     height:fit-content;
     max-height: 250px;
+    min-height: 180px;
+    background-color: green !important;
+    position: relative;
+}
+
+.card:hover .shared__card__info{
+    height:fit-content;
+    max-height: 250px;
+    min-height: 180px;
     background-color: rgb(90, 0, 90);;
     position: relative;
     padding: 16px 24px 24px 24px;
 }
 
+.card__done:hover .shared__card__info__done {
+    height:fit-content;
+    max-height: 250px;
+    min-height: 180px;
+    position: relative;
+    padding: 16px 24px 24px 24px;
+    background-color: rgb(0, 90, 0) !important;
+}
 
-.card:hover .card__info-hover {
+
+.card:hover .card__info-hover, .card__done:hover .card__info-hover {
     opacity: 1;
 }  
 
-.card:hover .shared__card__info-hover {
+.card:hover .shared__card__info-hover, .card__done:hover .shared__card__info-hover {
     opacity: 1;
 } 
 
-.card:hover .card__description{
+.card:hover .card__description, .card__done:hover .card__description{
     display: flex;
     color: #fff;
     text-align: left;
@@ -377,7 +430,7 @@ top: 0;
     top: 5px;
 }
 
-.card:hover .card__assign{
+.card:hover .card__assign, .card__done:hover .card__assign{
     display: inline-block;
     /* flex-wrap: wrap; */
     color: #fff;
@@ -388,16 +441,16 @@ top: 0;
     margin-right: 0.2rem;
 }
 
-.card:hover .card__title {
+.card:hover .card__title, .card__done:hover .card__title {
     display: none;
     opacity: 0;
 }
-.card:hover .card__board {
+.card:hover .card__board, .card__done:hover .card__board {
     color: #fff;
     display: block;
     opacity: 1;
 }
-.card:hover .task__due {
+.card:hover .task__due, .card__done:hover .task__due {
     display: none;
     opacity: 0;
 }
@@ -410,18 +463,25 @@ top: 0;
     display: inline-block;
     width: 24px;
     height: 24px;
-    margin-top: 2;
-    margin-left: 10px;
     cursor: pointer;
     text-align: left;
 }
 
 .task__delete{
     cursor: pointer;
-    display:inline;
+    display:inline-block;
     width: 24px;
     height: 24px;
-    right: 0;
+    text-align: center;
+}
+
+.task__done{
+    cursor: pointer;
+    display:inline-block;
+    width: 24px;
+    height: 24px;
+    /* margin-top: 2;
+    margin-left: 10px; */
     text-align: center;
 }
 
@@ -433,8 +493,11 @@ top: 0;
 }
 
 .task__delete:hover{
-    color: red !important;
-    
+    color: red !important; 
+}
+
+.task__done:hover{
+    color: rgb(90, 0, 90) !important; 
 }
 
 .task__edit:hover{
@@ -442,19 +505,22 @@ top: 0;
     
 }
 
-.card:hover .task__icons{
+.card:hover .task__icons, .card__done:hover .task__icons{
     display: flex;
-    gap: 60%;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 5px;    
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+    opacity: 100% !important;    
 }
 
-.card:hover .calen{
+.card:hover .calen, .card__done:hover .calen{
     display: none;
 }
 
-.card:hover .img__date{
+.card:hover .img__date, .card__done:hover .img__date{
     display: none;
 }
 

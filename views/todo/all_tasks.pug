@@ -64,10 +64,21 @@ html(lang="en")
                 if results.boards.myBoards.length > 0
                     each board in results.boards.myBoards 
                         each task in board.tasks
-                            article(class="card card--1")
+                            if task.status == "complete"
+                                - var card = 'card__done'
+                                - var card__info = 'card__info__done'
+                            else 
+                                - var card = 'card'
+                                - var card__info = 'card__info' 
+                            article(class= card + " card--1")
                                 div(class="card__img")
                                                     
                                     div(class="task__icons")
+                                        form(action="/board/"+board._id+"/"+task._id+"/task_status", method="POST")
+                                            input(type="hidden", name="_csrf", value= csrfToken)
+                                            button.icon__btn(type="submit")
+                                                span.task__done(class="material-icons md24") task
+
                                         form(action= "/board/"+board._id+"/"+task._id+"/edit", method="GET")
                                             button.icon__btn(type="submit")
                                                 span.task__edit(class="material-icons md24") edit
@@ -79,7 +90,7 @@ html(lang="en")
                                     h2.img__date #{task.day}
                                 a(href="#" class="card__link")                                   
                                     div(class="card__img--hover")
-                                div(class="card__info")
+                                div(class= card__info)
                                     span(class="card__title") #{task.title}
                                     h3(class="card__description") #{task.description}
                                     form(class="card__board", action = board.url, method="GET")
@@ -90,10 +101,21 @@ html(lang="en")
                 if results.boards.sharedBoards.length > 0
                     each board in results.boards.sharedBoards 
                         each task in board.tasks
-                            article(class="card card--1")
+                            if task.status == "complete"
+                                - var card = 'card__done'
+                                - var card__info = 'shared__card__info__done'
+                            else 
+                                - var card = 'card'
+                                - var card__info = 'shared__card__info' 
+                            article(class= card + " card--1")
                                 div(class="card__img")
                                                     
                                     div(class="task__icons")
+                                        form(action="/board/"+board._id+"/"+task._id+"/task_status", method="POST")
+                                            input(type="hidden", name="_csrf", value= csrfToken)
+                                            button.icon__btn(type="submit")
+                                                span.task__done(class="material-icons md24") task
+
                                         form(action= "/board/"+board._id+"/"+task._id+"/edit", method="GET")
                                             button.icon__btn(type="submit")
                                                 span.task__edit(class="material-icons md24") edit
@@ -105,7 +127,7 @@ html(lang="en")
                                     h2.img__date #{task.day}
                                 a(href="#" class="card__link")                                   
                                     div(class="card__img--hover")
-                                div(class="shared__card__info")
+                                div(class = card__info)
                                     span(class="card__title") #{task.title}
                                     h3(class="card__description") #{task.description}
                                     form(class="card__board", action = board.url, method="GET")

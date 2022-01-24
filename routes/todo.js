@@ -35,6 +35,8 @@ router.post('/shared_board/:boardID/task/create', isAuth, todo_controller.create
 router.get('/task/:_id/edit', isAuth, todo_controller.edit_myTask_get);
 router.post('/task/:_id/edit', isAuth, todo_controller.edit_myTask_post);
 
+router.post('/board/:boardID/:_id/task_status', isAuth, todo_controller.task_status)
+
 
 
 //router.get('/all',isAuth,  todo_controller.get_tasks);
