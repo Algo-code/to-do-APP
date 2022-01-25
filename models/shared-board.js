@@ -64,6 +64,45 @@ TaskSchema.virtual('weekday').get(function() {
     }
   });
 
+  TaskSchema.virtual('expired').get(function(){
+    const today = Date.now();
+    const diffTime = this.dueDate - today;
+    const diffDays = Math.ceil(diffTime/(1000 * 60 * 60 * 24));
+
+    if(diffDays < 0 && this.status != 'complete'){
+        return true;
+    }
+    else
+        return false;
+  });
+
+  TaskSchema.virtual('timePeriod').get(function(){
+    var due_date = DateTime.fromJSDate(this.dueDate).toLocaleString(DateTime.DATE_SHORT);
+    const today = Date.now();
+    const diffTime = today - this.dueDate;
+    const diffDays = Math.ceil(diffTime/(1000 * 60 * 60 * 24));
+    
+    if(diffDays < 1 ){
+        return 'current';
+    }
+    else if(diffDays > 0 && diffDays < 7 ){
+        return 'days';
+    }
+    else if(diffDays > 6 && diffDays < 15){
+        return 'week';
+    }
+    else if(diffDays > 14 && diffDays < 30){
+        return 'month';
+    }
+    else if(diffDays > 29 && diffDays < 90){
+        return 'quarter';
+    }
+    
+    else{
+        return 'older';
+    }
+  });
+
 
 var SharedBoardSchema = new Schema({
     name: {

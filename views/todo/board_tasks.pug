@@ -63,82 +63,6 @@ html(lang="en")
 
             
         div(class="split right")
-            
-            section(class="cards")
-                if boardType == 'myBoard'    
-                    if currentBoard.tasks != null && currentBoard.tasks.length > 0
-                        each task in currentBoard.tasks
-                            if task.status == "complete"
-                                - var card = 'card__done'
-                                - var card__info = 'card__info__done'
-                            else 
-                                - var card = 'card'
-                                - var card__info = 'card__info' 
-                            article(class= card + " card--1")
-                                div(class="card__img")
-                                        
-                                    div(class="task__icons")
-                                        form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
-                                            input(type="hidden", name="_csrf", value= csrfToken)
-                                            button.icon__btn(type="submit")
-                                                span.task__done(class="material-icons md24") task
-                                        form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
-                                            button.icon__btn(type="submit")
-                                                span.task__edit(class="material-icons md24") edit
-                                        form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
-                                            input(type="hidden", name="_csrf", value= csrfToken)
-                                            button.icon__btn(type="submit")
-                                                span.task__delete(class="material-icons md24") delete
-
-                                    h2.img__date #{task.day}
-                                a(href="#" class="card__link")                                   
-                                    div(class="card__img--hover")
-                                div(class= card__info)
-                                    span(class="card__title") #{task.title}
-                                    h3(class="card__description") #{task.description}
-                                    p(class="card__board") #{currentBoard.name}
-                                    span(class="task__due") #{task.weekday}
-                    else 
-                        h2 This board has no tasks!
-
-                if boardType == 'sharedBoard'    
-                    if currentBoard.tasks != null && currentBoard.tasks.length > 0
-                        each task in currentBoard.tasks
-                            if task.status == "complete"
-                                - var card = 'card__done'
-                                - var card__info = 'shared__card__info__done'
-                            else 
-                                - var card = 'card'
-                                - var card__info = 'shared__card__info' 
-                            article(class= card + " card--1")
-                                div(class="card__img")
-                                        
-                                    div(class="task__icons")
-                                        form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
-                                            input(type="hidden", name="_csrf", value= csrfToken)
-                                            button.icon__btn(type="submit")
-                                                span.task__done(class="material-icons md24") task
-
-                                        form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
-                                            button.icon__btn(type="submit")
-                                                span.task__edit(class="material-icons md24") edit
-
-                                        form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
-                                            input(type="hidden", name="_csrf", value= csrfToken)
-                                            button.icon__btn(type="submit")
-                                                span.task__delete(class="material-icons md24") delete
-
-                                    h2.img__date #{task.day}
-                                a(href="#" class="card__link")                                   
-                                    div(class="card__img--hover")
-                                div(class = card__info)
-                                    span(class="card__title") #{task.title}
-                                    h3(class="card__description") #{task.description}
-                                    p(class="card__board") #{currentBoard.name}
-                                    h3.card__assign #{task.assignedTo}
-                                    span(class="task__due") #{task.weekday}
-                    else 
-                        h2 This board has no tasks!
             section(class="top__items") 
                 span.chev1(class="material-icons md64") arrow_back_ios 
                 h2.t #{title}
@@ -151,3 +75,568 @@ html(lang="en")
                     form.logout(action='/shared_board/'+ currentBoard._id+'/task/create', method="GET") 
                         input(type="hidden", name="_csrf", value= csrfToken)
                         button(type="submit",class="btn btn__add__task") Add Task
+            .tsk
+                if boardType == 'myBoard'    
+                    if currentBoard.tasks != null && currentBoard.tasks.length > 0
+                        div(id= 'separator')    
+                            div(id='word')
+                                h3.inline current tasks
+                            div(id='line')
+                                hr.inline
+                            div(id='icn')
+                                span.inline(class="material-icons md24") expand_less
+                        section(class="cards")
+                            each task in currentBoard.tasks
+                                if task.timePeriod == 'current'
+                                    if task.status == "complete"
+                                        - var card = 'card__done'
+                                        - var card__info = 'card__info__done'
+                                    else if task.expired == true 
+                                        - var card = 'card__expired'
+                                        - var card__info = 'card__info__expired'
+                                    else 
+                                        - var card = 'card'
+                                        - var card__info = 'card__info' 
+                                    
+                                    article(class= card + " card--1")
+                                        div(class="card__img")
+                                                    
+                                            div(class="task__icons")
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__done(class="material-icons md24") task
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
+                                                    button.icon__btn(type="submit")
+                                                        span.task__edit(class="material-icons md24") edit
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__delete(class="material-icons md24") delete
+
+                                            h2.img__date #{task.day}
+                                        a(href="#" class="card__link")                                   
+                                            div(class="card__img--hover")
+                                        div(class= card__info)
+                                            span(class="card__title") #{task.title}
+                                            h3(class="card__description") #{task.description}
+                                            p(class="card__board") #{currentBoard.name}
+                                            span(class="task__due") #{task.weekday}
+
+                        div(id= 'separator')    
+                            div(id='word')
+                                h3.inline recent tasks
+                            div(id='line')
+                                hr.inline
+                            div(id='icn')
+                                span.inline(class="material-icons md24") expand_less
+                        section(class="cards")
+                            each task in currentBoard.tasks
+                                if task.timePeriod == 'days'
+                                    if task.status == "complete"
+                                        - var card = 'card__done'
+                                        - var card__info = 'card__info__done'
+                                    else if task.expired == true 
+                                        - var card = 'card__expired'
+                                        - var card__info = 'card__info__expired'
+                                    else 
+                                        - var card = 'card'
+                                        - var card__info = 'card__info' 
+                                    
+                                    article(class= card + " card--1")
+                                        div(class="card__img")
+                                                    
+                                            div(class="task__icons")
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__done(class="material-icons md24") task
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
+                                                    button.icon__btn(type="submit")
+                                                        span.task__edit(class="material-icons md24") edit
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__delete(class="material-icons md24") delete
+
+                                            h2.img__date #{task.day}
+                                        a(href="#" class="card__link")                                   
+                                            div(class="card__img--hover")
+                                        div(class= card__info)
+                                            span(class="card__title") #{task.title}
+                                            h3(class="card__description") #{task.description}
+                                            p(class="card__board") #{currentBoard.name}
+                                            span(class="task__due") #{task.weekday}                    
+
+                        div(id= 'separator')    
+                            div(id='word')
+                                h3.inline last week 
+                            div(id='line')
+                                hr.inline
+                            div(id='icn')
+                                span.inline(class="material-icons md24") expand_less
+                        section(class="cards")
+                            each task in currentBoard.tasks
+                                if task.timePeriod == 'week'
+                                    if task.status == "complete"
+                                        - var card = 'card__done'
+                                        - var card__info = 'card__info__done'
+                                    else if task.expired == true 
+                                        - var card = 'card__expired'
+                                        - var card__info = 'card__info__expired'
+                                    else 
+                                        - var card = 'card'
+                                        - var card__info = 'card__info' 
+                                    
+                                    article(class= card + " card--1")
+                                        div(class="card__img")
+                                                    
+                                            div(class="task__icons")
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__done(class="material-icons md24") task
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
+                                                    button.icon__btn(type="submit")
+                                                        span.task__edit(class="material-icons md24") edit
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__delete(class="material-icons md24") delete
+
+                                            h2.img__date #{task.day}
+                                        a(href="#" class="card__link")                                   
+                                            div(class="card__img--hover")
+                                        div(class= card__info)
+                                            span(class="card__title") #{task.title}
+                                            h3(class="card__description") #{task.description}
+                                            p(class="card__board") #{currentBoard.name}
+                                            span(class="task__due") #{task.weekday}
+
+                        div(id= 'separator')    
+                            div(id='word')
+                                h3.inline last month
+                            div(id='line')
+                                hr.inline
+                            div(id='icn')
+                                span.inline(class="material-icons md24") expand_less
+                        section(class="cards")
+                            each task in currentBoard.tasks
+                                if task.timePeriod == 'month'
+                                    if task.status == "complete"
+                                        - var card = 'card__done'
+                                        - var card__info = 'card__info__done'
+                                    else if task.expired == true 
+                                        - var card = 'card__expired'
+                                        - var card__info = 'card__info__expired'
+                                    else 
+                                        - var card = 'card'
+                                        - var card__info = 'card__info' 
+                                    
+                                    article(class= card + " card--1")
+                                        div(class="card__img")
+                                                    
+                                            div(class="task__icons")
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__done(class="material-icons md24") task
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
+                                                    button.icon__btn(type="submit")
+                                                        span.task__edit(class="material-icons md24") edit
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__delete(class="material-icons md24") delete
+
+                                            h2.img__date #{task.day}
+                                        a(href="#" class="card__link")                                   
+                                            div(class="card__img--hover")
+                                        div(class= card__info)
+                                            span(class="card__title") #{task.title}
+                                            h3(class="card__description") #{task.description}
+                                            p(class="card__board") #{currentBoard.name}
+                                            span(class="task__due") #{task.weekday}
+
+                        div(id= 'separator')    
+                            div(id='word')
+                                h3.inline recent 3 months
+                            div(id='line')
+                                hr.inline
+                            div(id='icn')
+                                span.inline(class="material-icons md24") expand_less
+                        section(class="cards")
+                            each task in currentBoard.tasks
+                                if task.timePeriod == 'quarter'
+                                    if task.status == "complete"
+                                        - var card = 'card__done'
+                                        - var card__info = 'card__info__done'
+                                    else if task.expired == true 
+                                        - var card = 'card__expired'
+                                        - var card__info = 'card__info__expired'
+                                    else 
+                                        - var card = 'card'
+                                        - var card__info = 'card__info' 
+                                    
+                                    article(class= card + " card--1")
+                                        div(class="card__img")
+                                                    
+                                            div(class="task__icons")
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__done(class="material-icons md24") task
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
+                                                    button.icon__btn(type="submit")
+                                                        span.task__edit(class="material-icons md24") edit
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__delete(class="material-icons md24") delete
+
+                                            h2.img__date #{task.day}
+                                        a(href="#" class="card__link")                                   
+                                            div(class="card__img--hover")
+                                        div(class= card__info)
+                                            span(class="card__title") #{task.title}
+                                            h3(class="card__description") #{task.description}
+                                            p(class="card__board") #{currentBoard.name}
+                                            span(class="task__due") #{task.weekday}
+
+                        div(id= 'separator')    
+                            div(id='word')
+                                h3.inline older tasks
+                            div(id='line')
+                                hr.inline
+                            div(id='icn')
+                                span.inline(class="material-icons md24") expand_less
+                        section(class="cards")
+                            each task in currentBoard.tasks
+                                if task.timePeriod == 'older'
+                                    if task.status == "complete"
+                                        - var card = 'card__done'
+                                        - var card__info = 'card__info__done'
+                                    else if task.expired == true 
+                                        - var card = 'card__expired'
+                                        - var card__info = 'card__info__expired'
+                                    else 
+                                        - var card = 'card'
+                                        - var card__info = 'card__info' 
+                                    
+                                    article(class= card + " card--1")
+                                        div(class="card__img")
+                                                    
+                                            div(class="task__icons")
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__done(class="material-icons md24") task
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
+                                                    button.icon__btn(type="submit")
+                                                        span.task__edit(class="material-icons md24") edit
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__delete(class="material-icons md24") delete
+
+                                            h2.img__date #{task.day}
+                                        a(href="#" class="card__link")                                   
+                                            div(class="card__img--hover")
+                                        div(class= card__info)
+                                            span(class="card__title") #{task.title}
+                                            h3(class="card__description") #{task.description}
+                                            p(class="card__board") #{currentBoard.name}
+                                            span(class="task__due") #{task.weekday}
+
+                    else 
+                        h2 This board has no tasks!
+
+            .tsk
+                if boardType == 'sharedBoard'    
+                    if currentBoard.tasks != null && currentBoard.tasks.length > 0
+                        .separator    
+                            div(id= 'separator')    
+                            div(id='word')
+                                h3.inline current tasks
+                            div(id='line')
+                                hr.inline
+                            div(id='icn')
+                                span.inline(class="material-icons md24") expand_less
+                        section(class="cards")
+                            each task in currentBoard.tasks
+                                if task.timePeriod == 'current'
+                                    if task.status == "complete"
+                                        - var card = 'card__done'
+                                        - var card__info = 'shared__card__info__done'
+                                    else if task.expired == true 
+                                            - var card = 'card__expired'
+                                            - var card__info = 'card__info__expired'
+                                    else 
+                                        - var card = 'card'
+                                        - var card__info = 'shared__card__info' 
+                                    article(class= card + " card--1")
+                                        div(class="card__img")
+                                                
+                                            div(class="task__icons")
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__done(class="material-icons md24") task
+
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
+                                                    button.icon__btn(type="submit")
+                                                        span.task__edit(class="material-icons md24") edit
+
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__delete(class="material-icons md24") delete
+
+                                            h2.img__date #{task.day}
+                                        a(href="#" class="card__link")                                   
+                                            div(class="card__img--hover")
+                                        div(class = card__info)
+                                            span(class="card__title") #{task.title}
+                                            h3(class="card__description") #{task.description}
+                                            p(class="card__board") #{currentBoard.name}
+                                            h3.card__assign #{task.assignedTo}
+                                            span(class="task__due") #{task.weekday}
+
+                        div(id= 'separator')    
+                            div(id='word')
+                                h3.inline recent tasks
+                            div(id='line')
+                                hr.inline
+                            div(id='icn')
+                                span.inline(class="material-icons md24") expand_less
+                        section(class="cards")
+                            each task in currentBoard.tasks
+                                if task.timePeriod == 'days'
+                                    if task.status == "complete"
+                                        - var card = 'card__done'
+                                        - var card__info = 'shared__card__info__done'
+                                    else if task.expired == true 
+                                            - var card = 'card__expired'
+                                            - var card__info = 'card__info__expired'
+                                    else 
+                                        - var card = 'card'
+                                        - var card__info = 'shared__card__info' 
+                                    article(class= card + " card--1")
+                                        div(class="card__img")
+                                                
+                                            div(class="task__icons")
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__done(class="material-icons md24") task
+
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
+                                                    button.icon__btn(type="submit")
+                                                        span.task__edit(class="material-icons md24") edit
+
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__delete(class="material-icons md24") delete
+
+                                            h2.img__date #{task.day}
+                                        a(href="#" class="card__link")                                   
+                                            div(class="card__img--hover")
+                                        div(class = card__info)
+                                            span(class="card__title") #{task.title}
+                                            h3(class="card__description") #{task.description}
+                                            p(class="card__board") #{currentBoard.name}
+                                            h3.card__assign #{task.assignedTo}
+                                            span(class="task__due") #{task.weekday}
+
+                        div(id= 'separator')    
+                            div(id='word')
+                                h3.inline last week
+                            div(id='line')
+                                hr.inline
+                            div(id='icn')
+                                span.inline(class="material-icons md24") expand_less
+                        section(class="cards")
+                            each task in currentBoard.tasks
+                                if task.timePeriod == 'week'
+                                    if task.status == "complete"
+                                        - var card = 'card__done'
+                                        - var card__info = 'shared__card__info__done'
+                                    else if task.expired == true 
+                                            - var card = 'card__expired'
+                                            - var card__info = 'card__info__expired'
+                                    else 
+                                        - var card = 'card'
+                                        - var card__info = 'shared__card__info' 
+                                    article(class= card + " card--1")
+                                        div(class="card__img")
+                                                
+                                            div(class="task__icons")
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__done(class="material-icons md24") task
+
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
+                                                    button.icon__btn(type="submit")
+                                                        span.task__edit(class="material-icons md24") edit
+
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__delete(class="material-icons md24") delete
+
+                                            h2.img__date #{task.day}
+                                        a(href="#" class="card__link")                                   
+                                            div(class="card__img--hover")
+                                        div(class = card__info)
+                                            span(class="card__title") #{task.title}
+                                            h3(class="card__description") #{task.description}
+                                            p(class="card__board") #{currentBoard.name}
+                                            h3.card__assign #{task.assignedTo}
+                                            span(class="task__due") #{task.weekday}
+
+                        div(id= 'separator')    
+                            div(id='word')
+                                h3.inline last month
+                            div(id='line')
+                                hr.inline
+                            div(id='icn')
+                                span.inline(class="material-icons md24") expand_less
+                        section(class="cards")
+                            each task in currentBoard.tasks
+                                if task.timePeriod == 'month'
+                                    if task.status == "complete"
+                                        - var card = 'card__done'
+                                        - var card__info = 'shared__card__info__done'
+                                    else if task.expired == true 
+                                            - var card = 'card__expired'
+                                            - var card__info = 'card__info__expired'
+                                    else 
+                                        - var card = 'card'
+                                        - var card__info = 'shared__card__info' 
+                                    article(class= card + " card--1")
+                                        div(class="card__img")
+                                                
+                                            div(class="task__icons")
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__done(class="material-icons md24") task
+
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
+                                                    button.icon__btn(type="submit")
+                                                        span.task__edit(class="material-icons md24") edit
+
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__delete(class="material-icons md24") delete
+
+                                            h2.img__date #{task.day}
+                                        a(href="#" class="card__link")                                   
+                                            div(class="card__img--hover")
+                                        div(class = card__info)
+                                            span(class="card__title") #{task.title}
+                                            h3(class="card__description") #{task.description}
+                                            p(class="card__board") #{currentBoard.name}
+                                            h3.card__assign #{task.assignedTo}
+                                            span(class="task__due") #{task.weekday}
+
+                        div(id= 'separator')    
+                            div(id='word')
+                                h3.inline last 3 months
+                            div(id='line')
+                                hr.inline
+                            div(id='icn')
+                                span.inline(class="material-icons md24") expand_less
+                        section(class="cards")
+                            each task in currentBoard.tasks
+                                if task.timePeriod == 'quarter'
+                                    if task.status == "complete"
+                                        - var card = 'card__done'
+                                        - var card__info = 'shared__card__info__done'
+                                    else if task.expired == true 
+                                            - var card = 'card__expired'
+                                            - var card__info = 'card__info__expired'
+                                    else 
+                                        - var card = 'card'
+                                        - var card__info = 'shared__card__info' 
+                                    article(class= card + " card--1")
+                                        div(class="card__img")
+                                                
+                                            div(class="task__icons")
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__done(class="material-icons md24") task
+
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
+                                                    button.icon__btn(type="submit")
+                                                        span.task__edit(class="material-icons md24") edit
+
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__delete(class="material-icons md24") delete
+
+                                            h2.img__date #{task.day}
+                                        a(href="#" class="card__link")                                   
+                                            div(class="card__img--hover")
+                                        div(class = card__info)
+                                            span(class="card__title") #{task.title}
+                                            h3(class="card__description") #{task.description}
+                                            p(class="card__board") #{currentBoard.name}
+                                            h3.card__assign #{task.assignedTo}
+                                            span(class="task__due") #{task.weekday}
+
+                        div(id= 'separator')    
+                            div(id='word')
+                                h3.inline older tasks
+                            div(id='line')
+                                hr.inline
+                            div(id='icn')
+                                span.inline(class="material-icons md24") expand_less
+                        section(class="cards")
+                            each task in currentBoard.tasks
+                                if task.timePeriod == 'older'
+                                    if task.status == "complete"
+                                        - var card = 'card__done'
+                                        - var card__info = 'shared__card__info__done'
+                                    else if task.expired == true 
+                                            - var card = 'card__expired'
+                                            - var card__info = 'card__info__expired'
+                                    else 
+                                        - var card = 'card'
+                                        - var card__info = 'shared__card__info' 
+                                    article(class= card + " card--1")
+                                        div(class="card__img")
+                                                
+                                            div(class="task__icons")
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/task_status", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__done(class="material-icons md24") task
+
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/edit", method="GET")
+                                                    button.icon__btn(type="submit")
+                                                        span.task__edit(class="material-icons md24") edit
+
+                                                form(action="/board/"+currentBoard._id+"/"+task._id+"/delete", method="POST")
+                                                    input(type="hidden", name="_csrf", value= csrfToken)
+                                                    button.icon__btn(type="submit")
+                                                        span.task__delete(class="material-icons md24") delete
+
+                                            h2.img__date #{task.day}
+                                        a(href="#" class="card__link")                                   
+                                            div(class="card__img--hover")
+                                        div(class = card__info)
+                                            span(class="card__title") #{task.title}
+                                            h3(class="card__description") #{task.description}
+                                            p(class="card__board") #{currentBoard.name}
+                                            h3.card__assign #{task.assignedTo}
+                                            span(class="task__due") #{task.weekday}
+
+                    else 
+                        h2 This board has no tasks!
+            

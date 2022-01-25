@@ -110,14 +110,14 @@ h2{
 }
 
  .cards {
-     flex: 1;
+    flex: 1;
     display: flex;
     flex-wrap: wrap;
     max-width: 1200px;
     min-width: 500px; 
     margin-bottom: 40px;
-    position: absolute;
-    top: 150px;
+    position:relative;
+    top: 0;
 }  
 
 .task__edit {
@@ -267,7 +267,7 @@ border-top-right-radius: 12px;
 top: 0;
   
 }
- .card, .card__done {
+ .card, .card__done, .card__expired {
   margin-right: 10px;
   margin-left: 10px;
   margin-bottom: 25px;
@@ -285,8 +285,11 @@ top: 0;
 .card__done{
     opacity: 50%;
 }
+.card__expired{
+    opacity: 70%;
+}
 
-.card:hover, .card__done:hover {
+.card:hover, .card__done:hover, .card__expired:hover {
   box-shadow: 0px 30px 18px -8px rgba(0, 0, 0,0.1);
     transform: scale(1.05, 1.05);
 }
@@ -312,7 +315,7 @@ top: 0;
     background-color: rgb(0, 90, 0) !important;
 }
 
-.card__info, .card__info__done {
+.card__info, .card__info__done, .card__info__expired {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -327,6 +330,9 @@ top: 0;
 
 .card__info__done{
     background-color: green !important;
+}
+.card__info__expired{
+    background-color: rgba(189, 3, 3);
 }
 
 .card__description {
@@ -359,7 +365,7 @@ top: 0;
     font-size: 14px;
     font-family: 'Raleway', sans-serif;
     font-weight: 500;
-    color: red;
+    color: rgb(255, 255, 255);
 }
 
 .card__board{
@@ -368,13 +374,13 @@ top: 0;
     display: none;
 }
 
-.card:hover .card__img--hover, .card__done:hover .card__img--hover {
+.card:hover .card__img--hover, .card__done:hover .card__img--hover, .card__expired:hover .card__img--hover {
     height: 36px;
     opacity: 0.3;
     opacity: 50%;
     display: none;
 }
-.card:hover .card__img, .card__done:hover .card__img{
+.card:hover .card__img, .card__done:hover .card__img, .card__expired:hover .card__img{
     height: 36px;
 }
 
@@ -391,6 +397,14 @@ top: 0;
     max-height: 250px;
     min-height: 180px;
     background-color: green !important;
+    position: relative;
+}
+
+.card__expired:hover .card__info__expired{
+    height:fit-content;
+    max-height: 250px;
+    min-height: 180px;
+    background-color: rgba(189, 3, 3) !important;
     position: relative;
 }
 
@@ -413,7 +427,7 @@ top: 0;
 }
 
 
-.card:hover .card__info-hover, .card__done:hover .card__info-hover {
+.card:hover .card__info-hover, .card__done:hover .card__info-hover, .card__expired:hover .card__info-hover {
     opacity: 1;
 }  
 
@@ -441,16 +455,16 @@ top: 0;
     margin-right: 0.2rem;
 }
 
-.card:hover .card__title, .card__done:hover .card__title {
+.card:hover .card__title, .card__done:hover .card__title, .card__expired:hover .card__title {
     display: none;
     opacity: 0;
 }
-.card:hover .card__board, .card__done:hover .card__board {
+.card:hover .card__board, .card__done:hover .card__board, .card__expired:hover .card__board {
     color: #fff;
     display: block;
     opacity: 1;
 }
-.card:hover .task__due, .card__done:hover .task__due {
+.card:hover .task__due, .card__done:hover .task__due, .card__expired:hover .task__due {
     display: none;
     opacity: 0;
 }
@@ -505,7 +519,7 @@ top: 0;
     
 }
 
-.card:hover .task__icons, .card__done:hover .task__icons{
+.card:hover .task__icons, .card__done:hover .task__icons, .card__expired:hover .task__icons{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -523,5 +537,31 @@ top: 0;
 .card:hover .img__date, .card__done:hover .img__date{
     display: none;
 }
+
+
+/* #separator{
+    content: '';
+    display: table;
+    clear: both;
+} */
+
+#word{
+    margin-top: 0;
+    padding-top: 0;
+    display: inline-block;
+    font-size: 18px;
+}
+#line{
+    width: 40rem;
+    display: inline-block;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-top: -5px;
+}
+#icn{
+    display: inline-block;
+}
+
+
 
 
