@@ -691,7 +691,7 @@ exports.task_status = (req, res, next) => {
         { $set: { "tasks.$.status": "complete" } },
         function (err) {
           if (err) return next(err);
-          return res.redirect(req.get("referer"));
+          return;// res.redirect(req.get("referer"));
         }
       );
     } else {

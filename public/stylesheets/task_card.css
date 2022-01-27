@@ -455,6 +455,10 @@ top: 0;
     margin-right: 0.2rem;
 }
 
+.card__expired:hover .task__done{
+    display: none;
+}
+
 .card:hover .card__title, .card__done:hover .card__title, .card__expired:hover .card__title {
     display: none;
     opacity: 0;
