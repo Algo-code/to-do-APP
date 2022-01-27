@@ -14,10 +14,6 @@ const currentDate = DateTime.fromJSDate(date).toLocaleString(
   DateTime.DATE_SHORT
 );
 
-function getDay(dueDate) {
-  return dueDate.getDate();
-}
-
 function getWeekday(dueDate) {
   var due_date = DateTime.fromJSDate(dueDate).toLocaleString(
     DateTime.DATE_SHORT
@@ -52,7 +48,7 @@ function getWeekday(dueDate) {
 exports.create_myTask_post = [
   body("title", "Task title can not be empty.")
     .trim()
-    .isLength({ min: 1, max: 15 })
+    .isLength({ min: 1, max: 20 })
     .escape(),
   body("description", "Use description to add more details")
     .optional({ checkFalsy: true })
@@ -89,7 +85,6 @@ exports.create_myTask_post = [
               dueDate: req.body.due_date,
               status: "new",
               timeStamp: date,
-              day: getDay(req.body.due_date),
             };
             board.tasks.push(task);
             board.save(function (err) {
@@ -111,7 +106,7 @@ exports.create_myTask_post = [
 exports.create_sharedTask_post = [
   body("title", "Task title can not be empty.")
     .trim()
-    .isLength({ min: 1, max: 15 })
+    .isLength({ min: 1, max: 20 })
     .escape(),
   body("description", "Use description to add more details")
     .optional({ checkFalsy: true })
@@ -173,8 +168,6 @@ exports.create_sharedTask_post = [
               priority: req.body.priority,
               createdBy: req.user._id,
               assignedTo: assignTask(req.body.assigned_to),
-              day: getDay(req.body.due_date),
-              //weekday: getWeekday(req.body.due_date),
             };
             board.tasks.push(task);
             board.save(function (err) {
@@ -469,10 +462,182 @@ exports.edit_myTask_get = (req, res, next) => {
   var board_id = mongoose.Types.ObjectId(req.params.boardID);
   var task_id = mongoose.Types.ObjectId(req.params._id);
   var user_id = req.user._id;
-  res.render("todo/add_task", { data: req.body });
+
+  User.findById(user_id, (err, result) => {
+    if(err)
+      return next(err);
+    if(result.myBoards.includes(board_id)){
+      MyBoard.findOne( {_id:board_id}, { tasks: { $elemMatch: { _id: { $eq: task_id } } }, /*joined: 1, lastLogin: 1 */} ).exec(function(err, task){
+          if(err)
+            return next(err);
+          //console.log(task.tasks[0]);
+          var boardType = 'myBoard'
+          var date = DateTime.fromJSDate(task.tasks[0].dueDate).toLocaleString(DateTime.DATE_SHORT);
+          var des = task.tasks[0].description
+          console.log(des)
+          res.render('todo/update_task', {title:'task update', description:des, date:date, task:task.tasks[0], boardType:boardType, board_id:board_id, _id:task_id})
+        })
+      }
+    else if(result.sharedBoards.includes(board_id)){
+      SharedBoard.findOne( {_id:board_id}, { tasks: { $elemMatch: { _id: { $eq: task_id } } }, /*joined: 1, lastLogin: 1 */} ).exec(function(err, task){
+        if(err)
+          return next(err);
+        //console.log(task.tasks[0]);
+        var boardType = 'sharedBoard'
+        var date = DateTime.fromJSDate(task.tasks[0].dueDate).toLocaleString(DateTime.DATE_SHORT);
+        var des = task.tasks[0].description
+          console.log(des)
+        res.render('todo/update_task', {title:'task update', description: des, date:date, task:task.tasks[0], boardType:boardType, board_id:board_id, _id:task_id})
+      })
+    }
+    else{
+      var err = new Error("Board Not Found");
+      err.status = 404;
+      return next(err);
+    }
+  })
 };
 
-exports.edit_myTask_post = (req, res, next) => {};
+exports.edit_myTask_post = [
+  body("title", "Task title can not be empty.")
+    .trim()
+    .isLength({ min: 1, max: 20 })
+    .escape(),
+  body("description", "Use description to add more details")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 150 })
+    .escape(),
+  body("due_date", "Invalid date").isISO8601().toDate(),
+
+  //process request after validation and sanitization
+  (req, res, next) => {
+    //extract validation errors from req
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.render("todo/update_task", {
+        board_id: req.params.boardID,
+        title: "update task",
+        task: req.body,
+        errors: errors.array(),
+      });
+      return;
+    }
+  
+  else{
+  var board_id = mongoose.Types.ObjectId(req.params.boardID);
+  var task_id = mongoose.Types.ObjectId(req.params._id);
+  var user_id = req.user._id;
+
+  User.findById(user_id, (err, result) => {
+    if(err)
+      return next(err);
+    if(result.myBoards.includes(board_id)){
+      MyBoard.updateOne({_id: board_id, "tasks._id": task_id},
+       {$set: {
+         "tasks.$.title": req.body.title,
+         "tasks.$.description": req.body.description,
+         "tasks.$.dueDate": req.body.due_date,
+         "tasks.$.status": "new",
+        }}, 
+      function(err){
+        if(err)
+          return next(err);
+        return res.redirect("/board/"+board_id);
+      });
+    } else if(result.sharedBoards.includes(board_id)){
+        return next();
+    }
+    else{
+      var err = new Error("Unauthorized Action");
+      err.status = 403;
+      return next(err);
+    }
+  })
+}
+}];
+
+exports.edit_sharedTask_post = [
+  body("title", "Task title can not be empty.")
+    .trim()
+    .isLength({ min: 1, max: 20 })
+    .escape(),
+  body("description", "Use description to add more details")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 150 })
+    .escape(),
+  body("priority", "set task importance by adding priority")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isNumeric()
+    .escape(),
+  body("assigned_to", "add user to whom the task is assigned")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isEmail()
+    .escape(),
+  body("due_date", "Invalid date").isISO8601().toDate(),
+
+  //process request after validation and sanitization
+  (req, res, next) => {
+    //extract validation errors from req
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.render("todo/update_task", {
+        board_id: req.params.boardID,
+        title: "update task",
+        task: req.body,
+        errors: errors.array(),
+      });
+      return;
+    }
+  
+  else{
+  var board_id = mongoose.Types.ObjectId(req.params.boardID);
+  var task_id = mongoose.Types.ObjectId(req.params._id);
+  var user_id = req.user._id;
+
+  User.findById(user_id, (err, result) => {
+    if(err)
+      return next(err);
+    if(result.sharedBoards.includes(board_id)){
+      function assignTask(array) {
+        if (Array.isArray(array)) {
+          if (array !== null && !array.isEmpty()) {
+            return array;
+          } else {
+            return new Array();
+          }
+        } else {
+          return new Array(array);
+        }
+      }
+      SharedBoard.updateOne({_id: board_id, "tasks._id": task_id},
+       {$set: {
+         "tasks.$.title": req.body.title,
+         "tasks.$.description": req.body.description,
+         "tasks.$.dueDate": req.body.due_date,
+         "tasks.$.status": "new",
+         "tasks.$.priority": req.body.priority,
+         "tasks.$.assignedTo": assignTask(req.body.assigned_to),
+        }}, 
+      function(err){
+        if(err)
+          return next(err);
+        return res.redirect("/board/"+board_id);
+      });
+    }
+    else{
+      var err = new Error("Unauthorized Action");
+      err.status = 403;
+      return next(err);
+    }
+  }
+  )}
+}];
 
 
 //POST controller to change task status

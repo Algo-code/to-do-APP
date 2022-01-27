@@ -24,10 +24,11 @@ var TaskSchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    day: {
-        type: String,
-    },
 });
+
+TaskSchema.virtual('day').get(function(){
+    return this.dueDate.getDate();
+})
 
 TaskSchema.virtual('weekday').get(function() {
     var due_date = DateTime.fromJSDate(this.dueDate).toLocaleString(DateTime.DATE_SHORT);

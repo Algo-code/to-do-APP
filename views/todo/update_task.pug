@@ -12,24 +12,62 @@ html(lang="en")
     title #{title}
   body 
     .form__control
-        form.new__task(action='/my_board/'+board_id+'/'+'task/create', method="POST")
-            .inline 
-                h2.add Add 
-                h2.todo Task
+        if boardType == "sharedBoard"
+            form.new__task(action='/board/'+board_id+'/'+_id+'/edit', method="POST")
+                .inline 
+                    h2.add Update 
+                    h2.todo Task
 
-            label(for="title")  
-                input(type="text", placeholder="Task", required=true, name="title")#title
-                span Title
-            label(for="description" )
-                TextArea(type="text", maxlength="128",placeholder="Task Description", required=true, name="description")#description
-                span Description
-            label(for="due_date")
-                input(type="date", placeholder="due date" required=true, name="due_date")#due_date 
-                //span Date
-            input(type="hidden", name="_csrf", value= csrfToken)
-            .btn__task
-                a(href="/")
-                    button.cancel__btn(type="button") Cancel
-                    
-                button.add__btn(type="submit") Add
-            
+                label(for="title")  
+                    input(type="text", placeholder="Task", required=true, name="title", value=task['title'])#title
+                    span Title
+                label(for="description" )
+                    TextArea(type="text", maxlength="128",placeholder="Task Description", required=true, name="description") #{undefined===task ? '' : task.description}
+                    span Description
+
+                label(for="priority")  
+                    select(type="select", placeholder="select level of priority", required=true, name="priority") #{undefined===task ? '' : task.priority}
+                        option(value="--Please choose an option--")
+                        option(value=0) 0
+                        option(value=1) 1
+                        option(value=2) 2
+                        option(value=3) 3
+                    span Priority
+
+                label(for="assigned_to")  
+                    input(list="users", type="text", placeholder="enter user email to assign task", required=true, name="assigned_to", value=task.assignedTo[0])#assigned_to
+                    span Assigned To
+                    datalist(id="users")
+
+                label(for="due_date")
+                    input(type="date", placeholder="due date" required=true, name="due_date", value=(undefined === date ? '' : task.dueDate))
+                
+                input(type="hidden", name="_csrf", value= csrfToken)
+                .btn__task
+                    a(href="/")
+                        button.cancel__btn(type="button") Cancel
+                        
+                    button.add__btn(type="submit") Update
+        
+        else 
+            form.new__task(action='/board/'+board_id+'/'+_id+'/edit', method="POST")
+                .inline 
+                    h2.add Update 
+                    h2.todo Task
+
+                label(for="title")  
+                    input(type="text", placeholder="Task", required=true, name="title", value=task['title'])#title
+                    span Title
+                label(for="description" )
+                    TextArea(type="text", maxlength="128",placeholder="Task Description", required=true, name="description") #{undefined===task ? '' : task.description}
+                    span Description
+
+                label(for="due_date")
+                    input(type="date", placeholder="due date" required=true, name="due_date", value=(undefined === date ? '' : task.dueDate))
+                
+                input(type="hidden", name="_csrf", value= csrfToken)
+                .btn__task
+                    a(href="/")
+                        button.cancel__btn(type="button") Cancel
+                        
+                    button.add__btn(type="submit") Update

@@ -32,8 +32,8 @@ router.post('/my_board/:boardID/task/create', isAuth, todo_controller.create_myT
 router.get('/shared_board/:boardID/task/create', isAuth, todo_controller.create_sharedTask_get);
 router.post('/shared_board/:boardID/task/create', isAuth, todo_controller.create_sharedTask_post);
 
-router.get('/task/:_id/edit', isAuth, todo_controller.edit_myTask_get);
-router.post('/task/:_id/edit', isAuth, todo_controller.edit_myTask_post);
+router.get('/board/:boardID/:_id/edit', isAuth, todo_controller.edit_myTask_get);
+router.post('/board/:boardID/:_id/edit', isAuth, todo_controller.edit_myTask_post, todo_controller.edit_sharedTask_post);
 
 router.post('/board/:boardID/:_id/task_status', isAuth, todo_controller.task_status)
 
