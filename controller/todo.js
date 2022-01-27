@@ -464,38 +464,67 @@ exports.edit_myTask_get = (req, res, next) => {
   var user_id = req.user._id;
 
   User.findById(user_id, (err, result) => {
-    if(err)
-      return next(err);
-    if(result.myBoards.includes(board_id)){
-      MyBoard.findOne( {_id:board_id}, { tasks: { $elemMatch: { _id: { $eq: task_id } } }, /*joined: 1, lastLogin: 1 */} ).exec(function(err, task){
-          if(err)
-            return next(err);
-          //console.log(task.tasks[0]);
-          var boardType = 'myBoard'
-          var date = DateTime.fromJSDate(task.tasks[0].dueDate).toLocaleString(DateTime.DATE_SHORT);
-          var des = task.tasks[0].description
-          console.log(des)
-          res.render('todo/update_task', {title:'task update', description:des, date:date, task:task.tasks[0], boardType:boardType, board_id:board_id, _id:task_id})
-        })
-      }
-    else if(result.sharedBoards.includes(board_id)){
-      SharedBoard.findOne( {_id:board_id}, { tasks: { $elemMatch: { _id: { $eq: task_id } } }, /*joined: 1, lastLogin: 1 */} ).exec(function(err, task){
-        if(err)
-          return next(err);
+    if (err) return next(err);
+    if (result.myBoards.includes(board_id)) {
+      MyBoard.findOne(
+        { _id: board_id },
+        {
+          tasks: {
+            $elemMatch: { _id: { $eq: task_id } },
+          } /*joined: 1, lastLogin: 1 */,
+        }
+      ).exec(function (err, task) {
+        if (err) return next(err);
         //console.log(task.tasks[0]);
-        var boardType = 'sharedBoard'
-        var date = DateTime.fromJSDate(task.tasks[0].dueDate).toLocaleString(DateTime.DATE_SHORT);
-        var des = task.tasks[0].description
-          console.log(des)
-        res.render('todo/update_task', {title:'task update', description: des, date:date, task:task.tasks[0], boardType:boardType, board_id:board_id, _id:task_id})
-      })
-    }
-    else{
+        var boardType = "myBoard";
+        var date = DateTime.fromJSDate(task.tasks[0].dueDate).toLocaleString(
+          DateTime.DATE_SHORT
+        );
+        var des = task.tasks[0].description;
+        console.log(des);
+        res.render("todo/update_task", {
+          title: "task update",
+          description: des,
+          date: date,
+          task: task.tasks[0],
+          boardType: boardType,
+          board_id: board_id,
+          _id: task_id,
+        });
+      });
+    } else if (result.sharedBoards.includes(board_id)) {
+      SharedBoard.findOne(
+        { _id: board_id },
+        {
+          tasks: {
+            $elemMatch: { _id: { $eq: task_id } },
+          } /*joined: 1, lastLogin: 1 */,
+        }
+      ).exec(function (err, task) {
+        if (err) return next(err);
+        //console.log(task.tasks[0]);
+        var boardType = "sharedBoard";
+        var date = DateTime.fromJSDate(task.tasks[0].dueDate).toLocaleString(
+          DateTime.DATE_SHORT
+        );
+        var des = task.tasks[0].description;
+        console.log(des);
+        res.render("todo/update_task", {
+          title: "task update",
+          description: des,
+          date: date,
+          task: task.tasks[0],
+          boardType: boardType,
+          board_id: board_id,
+          _id: task_id,
+        });
+      });
+    } else {
       var err = new Error("Board Not Found");
       err.status = 404;
       return next(err);
     }
-  })
+  });
 };
 
 exports.edit_myTask_post = [
@@ -513,50 +542,50 @@ exports.edit_myTask_post = [
   //process request after validation and sanitization
   (req, res, next) => {
     //extract validation errors from req
-    const errors = validationResult(req);
+    var board_id = mongoose.Types.ObjectId(req.params.boardID);
+    var task_id = mongoose.Types.ObjectId(req.params._id);
+    var user_id = req.user._id;
 
-    if (!errors.isEmpty()) {
-      res.render("todo/update_task", {
-        board_id: req.params.boardID,
-        title: "update task",
-        task: req.body,
-        errors: errors.array(),
-      });
-      return;
-    }
-  
-  else{
-  var board_id = mongoose.Types.ObjectId(req.params.boardID);
-  var task_id = mongoose.Types.ObjectId(req.params._id);
-  var user_id = req.user._id;
+    User.findById(user_id, (err, result) => {
+      if (err) return next(err);
+      if (result.myBoards.includes(board_id)) {
+        const errors = validationResult(req);
 
-  User.findById(user_id, (err, result) => {
-    if(err)
-      return next(err);
-    if(result.myBoards.includes(board_id)){
-      MyBoard.updateOne({_id: board_id, "tasks._id": task_id},
-       {$set: {
-         "tasks.$.title": req.body.title,
-         "tasks.$.description": req.body.description,
-         "tasks.$.dueDate": req.body.due_date,
-         "tasks.$.status": "new",
-        }}, 
-      function(err){
-        if(err)
-          return next(err);
-        return res.redirect("/board/"+board_id);
-      });
-    } else if(result.sharedBoards.includes(board_id)){
+        if (!errors.isEmpty()) {
+          res.render("todo/update_task", {
+            board_id: req.params.boardID,
+            title: "update task",
+            task: req.body,
+            errors: errors.array(),
+          });
+          return;
+        } else {
+          MyBoard.updateOne(
+            { _id: board_id, "tasks._id": task_id },
+            {
+              $set: {
+                "tasks.$.title": req.body.title,
+                "tasks.$.description": req.body.description,
+                "tasks.$.dueDate": req.body.due_date,
+                "tasks.$.status": "new",
+              },
+            },
+            function (err) {
+              if (err) return next(err);
+              return res.redirect("/board/" + board_id);
+            }
+          );
+        }
+      } else if (result.sharedBoards.includes(board_id)) {
         return next();
-    }
-    else{
-      var err = new Error("Unauthorized Action");
-      err.status = 403;
-      return next(err);
-    }
-  })
-}
-}];
+      } else {
+        var err = new Error("Unauthorized Action");
+        err.status = 403;
+        return next(err);
+      }
+    });
+  },
+];
 
 exports.edit_sharedTask_post = [
   body("title", "Task title can not be empty.")
@@ -593,52 +622,51 @@ exports.edit_sharedTask_post = [
         errors: errors.array(),
       });
       return;
-    }
-  
-  else{
-  var board_id = mongoose.Types.ObjectId(req.params.boardID);
-  var task_id = mongoose.Types.ObjectId(req.params._id);
-  var user_id = req.user._id;
+    } else {
+      var board_id = mongoose.Types.ObjectId(req.params.boardID);
+      var task_id = mongoose.Types.ObjectId(req.params._id);
+      var user_id = req.user._id;
 
-  User.findById(user_id, (err, result) => {
-    if(err)
-      return next(err);
-    if(result.sharedBoards.includes(board_id)){
-      function assignTask(array) {
-        if (Array.isArray(array)) {
-          if (array !== null && !array.isEmpty()) {
-            return array;
-          } else {
-            return new Array();
+      User.findById(user_id, (err, result) => {
+        if (err) return next(err);
+        if (result.sharedBoards.includes(board_id)) {
+          function assignTask(array) {
+            if (Array.isArray(array)) {
+              if (array !== null && !array.isEmpty()) {
+                return array;
+              } else {
+                return new Array();
+              }
+            } else {
+              return new Array(array);
+            }
           }
+          SharedBoard.updateOne(
+            { _id: board_id, "tasks._id": task_id },
+            {
+              $set: {
+                "tasks.$.title": req.body.title,
+                "tasks.$.description": req.body.description,
+                "tasks.$.dueDate": req.body.due_date,
+                "tasks.$.status": "new",
+                "tasks.$.priority": req.body.priority,
+                "tasks.$.assignedTo": assignTask(req.body.assigned_to),
+              },
+            },
+            function (err) {
+              if (err) return next(err);
+              return res.redirect("/board/" + board_id);
+            }
+          );
         } else {
-          return new Array(array);
-        }
-      }
-      SharedBoard.updateOne({_id: board_id, "tasks._id": task_id},
-       {$set: {
-         "tasks.$.title": req.body.title,
-         "tasks.$.description": req.body.description,
-         "tasks.$.dueDate": req.body.due_date,
-         "tasks.$.status": "new",
-         "tasks.$.priority": req.body.priority,
-         "tasks.$.assignedTo": assignTask(req.body.assigned_to),
-        }}, 
-      function(err){
-        if(err)
+          var err = new Error("Unauthorized Action");
+          err.status = 403;
           return next(err);
-        return res.redirect("/board/"+board_id);
+        }
       });
     }
-    else{
-      var err = new Error("Unauthorized Action");
-      err.status = 403;
-      return next(err);
-    }
-  }
-  )}
-}];
-
+  },
+];
 
 //POST controller to change task status
 exports.task_status = (req, res, next) => {
@@ -647,27 +675,29 @@ exports.task_status = (req, res, next) => {
   var user_id = req.user._id;
 
   User.findById(user_id, (err, result) => {
-    if(err)
-      return next(err);
-    if(result.myBoards.includes(board_id)){
-      MyBoard.updateOne({_id: board_id, "tasks._id": task_id}, {$set: {"tasks.$.status": "complete"}}, 
-      function(err){
-        if(err)
-          return next(err);
-        return res.redirect(req.get('referer'));
-      });
-    } else if(result.sharedBoards.includes(board_id)){
-      SharedBoard.updateOne({_id: board_id, "tasks._id":task_id}, {$set: {"tasks.$.status": "complete"}},
-      function(err){
-        if(err)
-          return next(err);
-        return res.redirect(req.get('referer'));
-      });
-    }
-    else{
+    if (err) return next(err);
+    if (result.myBoards.includes(board_id)) {
+      MyBoard.updateOne(
+        { _id: board_id, "tasks._id": task_id },
+        { $set: { "tasks.$.status": "complete" } },
+        function (err) {
+          if (err) return next(err);
+          return res.redirect(req.get("referer"));
+        }
+      );
+    } else if (result.sharedBoards.includes(board_id)) {
+      SharedBoard.updateOne(
+        { _id: board_id, "tasks._id": task_id },
+        { $set: { "tasks.$.status": "complete" } },
+        function (err) {
+          if (err) return next(err);
+          return res.redirect(req.get("referer"));
+        }
+      );
+    } else {
       var err = new Error("Unauthorized Action");
       err.status = 403;
       return next(err);
     }
-  }) 
-}
+  });
+};

@@ -435,7 +435,7 @@ top: 0;
     opacity: 1;
 } 
 
-.card:hover .card__description, .card__done:hover .card__description{
+.card:hover .card__description, .card__done:hover .card__description, .card__expired:hover .card__description{
     display: flex;
     color: #fff;
     text-align: left;
@@ -444,7 +444,7 @@ top: 0;
     top: 5px;
 }
 
-.card:hover .card__assign, .card__done:hover .card__assign{
+.card:hover .card__assign, .card__done:hover .card__assign, .card__expired:hover .card__assign{
     display: inline-block;
     /* flex-wrap: wrap; */
     color: #fff;
