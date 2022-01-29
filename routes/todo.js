@@ -12,6 +12,8 @@ const isAuth = require('../middleware/is-auth');
 
 router.get('/',isAuth, todo_controller.get_tasks);
 
+router.get('/about', isAuth, todo_controller.getAbout);
+
 router.get('/my_board/create', isAuth, todo_controller.create_myBoard_get);
 router.post('/my_board/create', isAuth, todo_controller.create_myBoard_post);
 
@@ -38,6 +40,7 @@ router.get('/board/:boardID/:_id/edit', isAuth, todo_controller.edit_myTask_get)
 router.post('/board/:boardID/:_id/edit', isAuth, todo_controller.edit_myTask_post, todo_controller.edit_sharedTask_post);
 
 router.post('/board/:boardID/:_id/task_status', isAuth, todo_controller.task_status)
+
 
 
 

@@ -1,29 +1,53 @@
-<DOCTYPE doctype html
+doctype html
 html(lang="en")
     head
         meta(charset="UTF-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel="stylesheet", href="/stylesheets/board_nav.css")
+        link(rel="stylesheet", href="/stylesheets/task_card.css")
+        link(rel="stylejs", href="/javascripts/main.js")
+        link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
+        link(href='https://css.gg/calendar.css' rel='stylesheet')
+        link(rel="stylesheet" href="/icons/font-awesome/css/font-awesome.css")
         title #{title}
         block styles
+
     body
         header.main-header 
             nav.main-header__nav 
                 ul.main-header__item-list 
-                    li.main-header__item 
-                        a(href="/", class=(path === '/' ? 'active' : '')) Home
-                    li.main-header__item 
-                        a(href="/", class=(path === '/' ? 'active' : '')) Boards 
-                    li.main-header__item 
-                        a(href="/", class=(path === '/' ? 'active' : '')) about 
-                ul.main-header__item-list
+                    li.main-header__item(class=(path === '/' ? 'active' : ''))
+                        a(href="/") Home
+                    div(class="dropdown")
+                        button.dropbtn(class=(path === '/board' ? 'active' : '')) Boards
+                            i(class="fa fa-caret-down")
+                        div(class="dropdown-content")
+                            a(href="/") All Tasks
+                            div(class="dropdown__in")
+                                button(class="dropbtn__in") My Boards
+                                    i(class="fa fa-caret-down")
+                                div(class="dropdown-content-in")
+                                    if results
+                                        each board in results.boards.myBoards 
+                                            a(href="/board/"+board._id) #{board.name}
+                            div(class="dropdown__in")
+                                button(class="dropbtn__in") Shared Boards
+                                    i(class="fa fa-caret-down")
+                                div(class="dropdown-content-in")
+                                    if results
+                                        each board in results.boards.sharedBoards 
+                                            a(href="/board/"+board._id) #{board.name} 
+                    li.main-header__item(class=(path === '/about' ? 'active' : '')) 
+                        a(href="/about") about 
+                ul.main-header__item-list-auth
                     if isAuth == false 
                         li.main-header__item 
-                            a(href="/", class=(path === '/' ? 'active' : '')) signin 
+                            a(href="/login", class=(path === '/login' ? 'active' : '')) signin 
                         li.main-header__item 
-                            a(href="/", class=(path === '/' ? 'active' : '')) signup 
+                            a(href="/signup", class=(path === '/signup' ? 'active' : '')) signup 
                     else 
                         li.main-header__item 
-                            a(href="/", class=(path === '/' ? 'active' : '')) logout
+                            a(href="/logout", class=(path === '/logout' ? 'active' : '')) logout
 
-        block content
+    block content

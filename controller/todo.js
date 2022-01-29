@@ -327,6 +327,7 @@ exports.get_tasks = (req, res, next) => {
         title: "All Tasks",
         results: results,
         currentDate: currentDate,
+        path:'/'
       });
     }
   );
@@ -377,47 +378,17 @@ exports.get_task_board = (req, res, next) => {
         //console.log(total);
         return mtotal + stotal;
       }
-      res.render("todo/board_tasks", {
+      res.render("todo/board_nav", {
         title: currentBoard.name + " Tasks",
         boardType: boardType,
         results: results,
         totalTasks: totalTasks(),
         currentBoard: currentBoard,
-        path: "/my_board/" /*+results.board_tasks._id*/,
+        path: "/board"//+currentBoard._id,
       });
     }
   );
 };
-
-// //Display Task by shared_Board category
-// exports.get_task_board = (req, res, next) => {
-//   async.parallel(
-//     {
-//       boards: function (callback) {
-//         User.findById(req.user._id)
-//           .populate({
-//             path: "sharedBoards",
-//             options: { sort: { name: "1" } },
-//           })
-//           .exec(callback);
-//       },
-//     },
-//     function (err, results) {
-//       if (err) return next(err);
-//       if (results.myBoards === null || results.sharedBoards === null) {
-//         var err = new Error("Board Not Found");
-//         err.status = 404;
-//         return next(err);
-//       }
-//       res.render("todo/shared_board_tasks", {
-//         results: results,
-//         path: "/share_board/" /*+results.board_tasks._id*/,
-//       });
-//     }
-//   );
-// };
-
-//Delete Personal Task Post Controller
 
 exports.deleteTask = (req, res, next) => {
   var board_id = mongoose.Types.ObjectId(req.params.boardID);
@@ -729,4 +700,10 @@ exports.deleteBoard_post = (req, res, next) => {
       return next(err); 
     }
   })
+}
+
+//Display about page
+
+exports.getAbout = (req, res, next) => {
+  res.render('about', {title: 'about', path: '/about'});
 }
