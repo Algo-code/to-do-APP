@@ -71,10 +71,16 @@ html(lang="en")
                     form.logout(action='/my_board/'+ currentBoard._id+'/task/create', method="GET") 
                         input(type="hidden", name="_csrf", value= csrfToken)
                         button(type="submit",class="btn btn__add__task") Add Task
+                    form.logout(action='/board/'+ currentBoard._id+'/delete', method="POST") 
+                        input(type="hidden", name="_csrf", value= csrfToken)
+                        button(type="submit",class="btn btn__delete") delete board
                 else if boardType == 'sharedBoard'
                     form.logout(action='/shared_board/'+ currentBoard._id+'/task/create', method="GET") 
                         input(type="hidden", name="_csrf", value= csrfToken)
                         button(type="submit",class="btn btn__add__task") Add Task
+                    form.logout(action='/board/'+ currentBoard._id+'/delete', method="POST") 
+                        input(type="hidden", name="_csrf", value= csrfToken)
+                        button(type="submit",class="btn btn__delete") delete board
             .tsk
                 if boardType == 'myBoard'    
                     if currentBoard.tasks != null && currentBoard.tasks.length > 0

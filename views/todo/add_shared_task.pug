@@ -24,7 +24,12 @@ html(lang="en")
                 TextArea(type="text", maxlength="128",placeholder="Task Description", required=true, name="description")#description
                 span Description
             label(for="priority")  
-                input(type="number", placeholder="enter a number 1-5", required=true, name="priority")#priority
+                select(type="select", placeholder="select level of priority", required=true, name="priority") #{undefined===task ? '' : task.priority}
+                    option(value="--Please choose an option--")
+                    option(value=0) 0
+                    option(value=1) 1
+                    option(value=2) 2
+                    option(value=3) 3
                 span Priority
             label(for="assigned_to")  
                 input(list="users", type="text", placeholder="enter user email to assign task", required=true, name="assigned_to")#assigned_to

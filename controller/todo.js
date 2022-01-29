@@ -7,6 +7,7 @@ const async = require("async");
 const { body, validationResult } = require("express-validator");
 
 const mongoose = require("mongoose");
+const { findByIdAndDelete } = require("../models/board");
 //const { getMaxListeners, count } = require("../models/todo");
 
 const date = new Date(Date.now());
@@ -701,3 +702,31 @@ exports.task_status = (req, res, next) => {
     }
   });
 };
+
+//POST controller for deleting a board
+exports.deleteBoard_post = (req, res, next) => {
+  var user_id = req.user
+  var board_id = req.params.boardID;
+
+  User.findById(user_id, (err, result)=>{
+    if(result.myBoards.includes(board_id)){
+      MyBoard.findByIdAndDelete(board_id, function(err, board){
+        if(err)
+          return next(err);
+        return res.redirect('/');
+      });
+    }
+    else if(result.sharedBoards.includes(board_id)){
+      SharedBoard.findByIdAndDelete(board_id, function(err, board){
+        if(err)
+          return next(err);
+        return res.redirect('/');
+      })
+    }
+    else{
+      var err = new Error("Board Not Found");
+      err.status = 404;
+      return next(err); 
+    }
+  })
+}

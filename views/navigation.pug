@@ -1,0 +1,29 @@
+<DOCTYPE doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title #{title}
+        block styles
+    body
+        header.main-header 
+            nav.main-header__nav 
+                ul.main-header__item-list 
+                    li.main-header__item 
+                        a(href="/", class=(path === '/' ? 'active' : '')) Home
+                    li.main-header__item 
+                        a(href="/", class=(path === '/' ? 'active' : '')) Boards 
+                    li.main-header__item 
+                        a(href="/", class=(path === '/' ? 'active' : '')) about 
+                ul.main-header__item-list
+                    if isAuth == false 
+                        li.main-header__item 
+                            a(href="/", class=(path === '/' ? 'active' : '')) signin 
+                        li.main-header__item 
+                            a(href="/", class=(path === '/' ? 'active' : '')) signup 
+                    else 
+                        li.main-header__item 
+                            a(href="/", class=(path === '/' ? 'active' : '')) logout
+
+        block content
