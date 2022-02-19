@@ -7,7 +7,7 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
-const MONGODB_URI = 'mongodb+srv://algo:algo@cluster0.g6kzb.mongodb.net/Todo-app';
+const MONGODB_URI = 'MongoDB URI';
 
 const InitiateMongoServer = require("./config/db")
 
