@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 //mongodb uri
-const MONGOURI = "mongodb+srv://algo:algo@cluster0.g6kzb.mongodb.net/Todo-app?retryWrites=true&w=majority"
+const MONGOURI = "MongoDB URI"
 
 const InitiateMongoServer = async () => {
     try{
